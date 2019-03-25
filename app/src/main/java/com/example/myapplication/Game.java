@@ -88,7 +88,7 @@ class Game extends View {
 
         blockStandard = defineBitmap(R.drawable.block, bWidth, bHeight);
 
-        blocks.add(new Blokje(dWidth/2, dHeight/100*25, bWidth, bHeight));
+//        blocks.add(new Blokje(dWidth/2, dHeight/100*25, bWidth, bHeight));
         blocks.add(new Blokje(dWidth/2, dHeight/100*50, bWidth, bHeight));
 //        blocks.add(new Blokje(dWidth/2, dHeight/100*75, bWidth, bHeight));
 

@@ -77,48 +77,74 @@ public class Blokje extends Activity {
 
     public void bounce(int speedX, int speedY, int ballX, int ballY, int width, int height, boolean goingUp, boolean goingRight){
         reset();
-        if (ballX + width + Math.abs(speedX) >  minX && ballX + width < minX){
-            if (ballY + height > maxY && ballY < minY){
+        int cballX, cballY;
+        boolean c1, c2, c3;
+        if(goingRight && goingUp) {
+            cballX = ballX + speedX;
+            c1 = hit(cballX, ballY, width, height);
+            cballY = ballY - speedY;
+            c2 = hit(ballX, cballY, width, height);
+            c3 = hit(cballX, cballY, width, height);
+            if (c1) {
                 fromLeft = true;
             }
-            else if (ballY + height + speedY > maxY && goingUp) {
+            if (c2) {
+                fromDown = true;
+            }
+            if (!c1 && !c2 && c3) {
+                fromLeft = true;
+                fromDown = true;
+            }
+        }
+        else if(!goingRight && goingUp){
+            cballX = ballX - speedX;
+            c1 = hit(cballX, ballY, width, height);
+            cballY = ballY - speedY;
+            c2 = hit(ballX, cballY, width, height);
+            c3 = hit(cballX, cballY, width, height);
+            if (c1){
+                fromRight = true;
+            }
+            if (c2){
+                fromDown = true;
+            }
+            if (!c1 && !c2 && c3){
+                fromRight = true;
+                fromDown = true;
+            }
+        }
+        else if(goingRight && !goingUp) {
+            cballX = ballX + speedX;
+            c1 = hit(cballX, ballY, width, height);
+            cballY = ballY + speedY;
+            c2 = hit(ballX, cballY, width, height);
+            c3 = hit(cballX, cballY, width, height);
+            if (c1) {
                 fromLeft = true;
             }
-            else if (ballY - speedY < minY && !goingUp) {
+            if (c2) {
+                fromUp = true;
+            }
+            if (!c1 && !c2 && c3) {
                 fromLeft = true;
-            }
-        }
-        else if (ballX - Math.abs(speedX) < maxX && ballX > maxX){
-            if (ballY + height > maxY && ballY < minY){
-                fromRight = true;
-            }
-            else if (ballY + height + speedY > maxY && goingUp) {
-                fromRight = true;
-            }
-            else if (ballY - speedY < minY && !goingUp) {
-                fromRight = true;
-            }
-        }
-        if (ballY + height + Math.abs(speedY) > maxY) {
-            if (ballX + width > minX && ballX < minX){
-                fromUp = true;
-            }
-            else if (ballX + width + speedX > minX && goingRight){
-                fromUp = true;
-            }
-            else if (ballX - speedX < maxX && !goingRight){
                 fromUp = true;
             }
         }
-        else if (ballY - Math.abs(speedY) < minY) {
-            if (ballX + width > minX && ballX < minX){
-                fromDown = true;
+        else if(!goingRight && !goingUp){
+            cballX = ballX - speedX;
+            c1 = hit(cballX, ballY, width, height);
+            cballY = ballY + speedY;
+            c2 = hit(ballX, cballY, width, height);
+            c3 = hit(cballX, cballY, width, height);
+            if (c1){
+                fromRight = true;
             }
-            else if (ballX + width + speedX > minX && goingRight){
-                fromDown = true;
+            if (c2){
+                fromUp = true;
             }
-            else if (ballX - speedX < maxX && !goingRight){
-                fromDown = true;
+            if (!c1 && !c2 && c3){
+                fromRight = true;
+                fromUp = true;
             }
         }
     }
