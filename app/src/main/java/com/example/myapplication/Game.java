@@ -27,7 +27,7 @@ class Game extends View {
     int dWidth, dHeight;
 
 //  voor het updaten van het scherm in miliseconde:
-    final int UPDATE_MILLIS = 1;
+    final long UPDATE_MILLIS = 1/3000;
 
 //  bal
     Bitmap ball;
@@ -77,20 +77,15 @@ class Game extends View {
         ballY = dHeight/2 - ball.getHeight()/2;
 
         maxCursor = defineBitmap(R.drawable.ball, 50, 50);
-        maxCursorX = -20;
-        maxCurosrY = -20;
+        maxCursorX = -1000;
 
         bigCursor = defineBitmap(R.drawable.ball, 40, 40);
-        bigCursorX = -20;
-        bigCursorY = -20;
-
+        bigCursorX = -1000;
         medCursor = defineBitmap(R.drawable.ball, 30, 30);
-        medCursorX = -20;
-        medCursorY = -20;
+        medCursorX = -1000;
 
         minCursor = defineBitmap(R.drawable.ball, 20, 20);
-        minCursorX = -20;
-        minCursorY = -20;
+        minCursorX = -1000;
 
         blockStandard = defineBitmap(R.drawable.block, bWidth, bHeight);
 
@@ -155,10 +150,55 @@ class Game extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        for(int i = 0; i< blocks.size(); i++) {
+            blocks.get(i).bounce(speedX, speedY, ballX, ballY, ball.getWidth(), ball.getHeight(), goingUp, goingForward);
+        }
         super.onDraw(canvas);
         checkBounce();
         for(int i = 0; i< blocks.size(); i++){
-            blocks.get(i).hit(ballX, ballY,ball.getWidth(), ball.getHeight());
+            hitBlock = blocks.get(i).hit(ballX, ballY,ball.getWidth(), ball.getHeight());
+            if(hitBlock) {
+                if (blocks.get(i).isFromLeft()){
+                    if (goingForward) {
+                        goingForward = false;
+                        blocks.get(i).setFromLeft(false);
+                    }
+                    else {
+                        goingForward = true;
+                        blocks.get(i).setFromLeft(false);
+                    }
+                }
+                else if (blocks.get(i).isFromRight()){
+                    if (goingForward) {
+                        goingForward = false;
+                        blocks.get(i).setFromRight(false);
+                    }
+                    else {
+                        goingForward = true;
+                        blocks.get(i).setFromRight(false);
+                    }
+                }
+                if (blocks.get(i).isFromUp()){
+                    if (goingUp) {
+                        goingUp = false;
+                        blocks.get(i).setFromUp(false);
+                    }
+                    else {
+                        goingUp = true;
+                        blocks.get(i).setFromUp(false);
+                    }
+                }
+                else if (blocks.get(i).isFromDown()){
+                    if (goingUp) {
+                        goingUp = false;
+                        blocks.get(i).setFromDown(false);
+                    }
+                    else {
+                        goingUp = true;
+                        blocks.get(i).setFromDown(false);
+                    }
+                }
+            }
             canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
         }
 //        canvas.drawBitmap(finish, dWidth /10 *9 , dHeight/2 - finish.getHeight()/2  , null);
@@ -218,5 +258,17 @@ class Game extends View {
             touched = true;
         }
         return true;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
+
+    public void setBallX(int ballX) {
+        this.ballX = ballX;
+    }
+
+    public void setBallY(int ballY) {
+        this.ballY = ballY;
     }
 }
