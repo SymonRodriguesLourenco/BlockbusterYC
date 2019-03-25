@@ -11,7 +11,8 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.myapplication.blokjes.Blokje;
+import com.example.myapplication.blokjes.Block;
+import com.example.myapplication.blokjes.Hard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ class Game extends View {
 
 //  Blocks
     Bitmap blockStandard;
-    List<Blokje> blocks = new ArrayList<>();
+    List<Block> blocks = new ArrayList<>();
     int bHeight, bWidth;
     boolean hitBlock;
 
@@ -93,9 +94,9 @@ class Game extends View {
 
         blockStandard = defineBitmap(R.drawable.block, bWidth, bHeight);
 
-        blocks.add(new Blokje(dWidth/2, dHeight/100*25, bWidth, bHeight));
-        blocks.add(new Blokje(dWidth/2, dHeight/100*50, bWidth, bHeight));
-        blocks.add(new Blokje(dWidth/2, dHeight/100*75, bWidth, bHeight));
+        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
+        blocks.add(new Hard(dWidth/2, dHeight/100*50, bWidth, bHeight));
+        blocks.add(new Hard(dWidth/2, dHeight/100*75, bWidth, bHeight));
 
 //        finish = defineBitmap(R.drawable.block, 200, 200);
     }
@@ -157,10 +158,7 @@ class Game extends View {
         super.onDraw(canvas);
         checkBounce();
         for(int i = 0; i< blocks.size(); i++){
-            hitBlock = blocks.get(i).hit(ballX, ballY,ball.getWidth(), ball.getHeight());
-            if(hitBlock){
-                blocks.get(i).remove();
-            }
+            blocks.get(i).hit(ballX, ballY,ball.getWidth(), ball.getHeight());
             canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
         }
 //        canvas.drawBitmap(finish, dWidth /10 *9 , dHeight/2 - finish.getHeight()/2  , null);

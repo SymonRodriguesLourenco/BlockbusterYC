@@ -3,14 +3,16 @@ package com.example.myapplication.blokjes;
 import android.app.Activity;
 import android.graphics.Rect;
 
-public class Blokje extends Activity {
+public abstract class Block extends Activity {
 
     int width, height;
     int minX, minY, maxX, maxY;
+    int hitsLeft;
 
-    public Blokje(int X, int Y, int width, int height) {
+    public Block(int X, int Y, int width, int height, int hitsLeft) {
         this.width = width;
         this.height = height;
+        this.hitsLeft = hitsLeft;
         this.minX = X - width/2;
         this.maxX = minX + width;
         this.maxY = Y - height/2;
@@ -19,14 +21,6 @@ public class Blokje extends Activity {
 
     public int getMinX() {
         return minX;
-    }
-
-    public int getMinY() {
-        return minY;
-    }
-
-    public int getMaxX() {
-        return maxX;
     }
 
     public int getMaxY() {
@@ -40,12 +34,12 @@ public class Blokje extends Activity {
         this.maxY = -100;
     }
 
-    public boolean hit(int balX,int balY, int width, int height){
+    public void hit(int balX,int balY, int width, int height){
         if (minX < balX+width && balX < maxX && minY > balY && balY+height > maxY) {
-            return true;
-        }
-        else{
-            return false;
+            this.hitsLeft--;
+            if(this.hitsLeft == 0){
+                this.remove();
+            }
         }
     }
 
