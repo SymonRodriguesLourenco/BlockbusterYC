@@ -99,11 +99,27 @@ public class Blokje extends Activity {
                 fromRight = true;
             }
         }
-        if (ballY + height + Math.abs(speedY) > maxY && ballY + height < maxY && ballX + width > minX && ballX < minX) {
-            fromUp = true;
+        if (ballY + height + Math.abs(speedY) > maxY) {
+            if (ballX + width > minX && ballX < minX){
+                fromUp = true;
+            }
+            else if (ballX + width + speedX > minX && goingRight){
+                fromUp = true;
+            }
+            else if (ballX - speedX < maxX && !goingRight){
+                fromUp = true;
+            }
         }
-        else if (ballY - Math.abs(speedY) < minY && ballY > minY && ballX + width > minX && ballX < minX) {
-            fromDown = true;
+        else if (ballY - Math.abs(speedY) < minY) {
+            if (ballX + width > minX && ballX < minX){
+                fromDown = true;
+            }
+            else if (ballX + width + speedX > minX && goingRight){
+                fromDown = true;
+            }
+            else if (ballX - speedX < maxX && !goingRight){
+                fromDown = true;
+            }
         }
     }
 
