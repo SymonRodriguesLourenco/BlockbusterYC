@@ -61,18 +61,17 @@ public abstract class Block extends Activity {
     }
 
     public void remove() {
-        this.minX = -300;
-        this.maxX = -200;
-        this.minY = -200;
-        this.maxY = -100;
+        this.hitsLeft--;
+        if(this.hitsLeft == 0){
+            this.minX = -300;
+            this.maxX = -200;
+            this.minY = -200;
+            this.maxY = -100;
+        }
     }
 
     public boolean hit(int balX,int balY, int width, int height){
         if (minX < balX+width && balX < maxX && minY > balY && balY+height > maxY) {
-            this.hitsLeft--;
-            if(this.hitsLeft == 0){
-                this.remove();
-            }
             return true;
         }
         else{

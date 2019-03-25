@@ -201,6 +201,7 @@ class Game extends View {
                         blocks.get(i).setFromDown(false);
                     }
                 }
+                blocks.get(i).remove();
             }
             canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
         }
