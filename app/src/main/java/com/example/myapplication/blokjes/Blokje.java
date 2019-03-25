@@ -1,7 +1,6 @@
 package com.example.myapplication.blokjes;
 
 import android.app.Activity;
-import android.graphics.Rect;
 
 public class Blokje extends Activity {
 
@@ -42,6 +41,15 @@ public class Blokje extends Activity {
 
     public boolean hit(int balX,int balY, int width, int height){
         if (minX < balX+width && balX < maxX && minY > balY && balY+height > maxY) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static boolean hitFinish(int balX, int balY, int finishX, int finishY, int width, int height, int ballwidth, int ballheight){
+        if (finishX+ballwidth < balX+ballwidth && balX < finishX+width-ballwidth && finishY+ballheight < balY+ballheight && balY < finishY+height-ballheight){
             return true;
         }
         else{

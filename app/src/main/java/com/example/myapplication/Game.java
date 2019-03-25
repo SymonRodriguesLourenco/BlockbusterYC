@@ -26,7 +26,7 @@ class Game extends View {
     int dWidth, dHeight;
 
 //  voor het updaten van het scherm in miliseconde:
-    final int UPDATE_MILLIS = 1;
+    final int UPDATE_MILLIS = 10;
 
 //  bal
     Bitmap ball;
@@ -44,6 +44,9 @@ class Game extends View {
     int bHeight, bWidth;
     boolean hitBlock;
 
+//  Finish
+    Bitmap finish;
+
 //  als de bal naar links gaat is going forward false anders true, als de bal naar boven gaat i goingup true,anders false
     Bitmap maxCursor, bigCursor, medCursor, minCursor;
 //  de coordinaten van de maxCursor
@@ -51,7 +54,6 @@ class Game extends View {
 
 //  of het spel gestart is en de bal weggeschoten is
     boolean touched;
-
 
     public Game(Context context) {
         super(context);
@@ -97,7 +99,8 @@ class Game extends View {
         blocks.add(new Blokje(dWidth/2, dHeight/100*50, bWidth, bHeight));
         blocks.add(new Blokje(dWidth/2, dHeight/100*75, bWidth, bHeight));
 
-//        finish = defineBitmap(R.drawable.block, 200, 200);
+        finish = BitmapFactory.decodeResource(getResources(), R.drawable.block2);
+        finish = Bitmap.createScaledBitmap(finish, 200,200, false);
     }
 
     public void checkBounce(){
@@ -115,6 +118,7 @@ class Game extends View {
                 }
                 goingForward = true;
             }
+
 //          bal gaat naar rechts
             if ((ballX + speedX) >= maxX) {
                 if ((ballX + speedX) > maxX) {
@@ -150,7 +154,9 @@ class Game extends View {
                 ballY -= speedY;
             }
         }
+
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -161,9 +167,14 @@ class Game extends View {
             if(hitBlock){
                 blocks.get(i).remove();
             }
+
+            if (Blokje.hitFinish(ballX, ballY,dWidth /10 *9, dHeight/2 - finish.getHeight()/2, finish.getWidth(), finish.getHeight(), ball.getWidth(), ball.getHeight())) {
+                touched = false;
+            }
             canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
         }
-//        canvas.drawBitmap(finish, dWidth /10 *9 , dHeight/2 - finish.getHeight()/2  , null);
+
+        canvas.drawBitmap(finish, dWidth /10 *9 , dHeight/2 - finish.getHeight()/2  , null);
         canvas.drawBitmap(ball, ballX, ballY, null);
         canvas.drawBitmap(maxCursor, maxCursorX, maxCurosrY, null);
         canvas.drawBitmap(bigCursor, bigCursorX, bigCursorY, null);
@@ -222,3 +233,4 @@ class Game extends View {
         return true;
     }
 }
+
