@@ -24,14 +24,6 @@ public abstract class Block extends Activity {
         return minX;
     }
 
-    public int getMinY() {
-        return minY;
-    }
-
-    public int getMaxX() {
-        return maxX;
-    }
-
     public int getMaxY() {
         return maxY;
     }
@@ -75,12 +67,16 @@ public abstract class Block extends Activity {
         this.maxY = -100;
     }
 
-    public void hit(int balX,int balY, int width, int height){
+    public boolean hit(int balX,int balY, int width, int height){
         if (minX < balX+width && balX < maxX && minY > balY && balY+height > maxY) {
             this.hitsLeft--;
             if(this.hitsLeft == 0){
                 this.remove();
             }
+            return true;
+        }
+        else{
+            return false;
         }
     }
 

@@ -12,7 +12,10 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.myapplication.blokjes.Block;
+import com.example.myapplication.blokjes.Finish;
 import com.example.myapplication.blokjes.Hard;
+import com.example.myapplication.blokjes.Medium;
+import com.example.myapplication.blokjes.Soft;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,8 +93,8 @@ class Game extends View {
         blockStandard = defineBitmap(R.drawable.block, bWidth, bHeight);
 
         blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
-        blocks.add(new Hard(dWidth/2, dHeight/100*50, bWidth, bHeight));
-        blocks.add(new Hard(dWidth/2, dHeight/100*75, bWidth, bHeight));
+        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight));
+        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
 
 //        finish = defineBitmap(R.drawable.block, 200, 200);
     }
