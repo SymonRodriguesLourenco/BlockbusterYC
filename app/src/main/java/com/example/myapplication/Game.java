@@ -75,7 +75,7 @@ class Game extends View {
         bHeight = dHeight/100*18;
         bWidth = dWidth/20;
 
-        ball = defineBitmap(R.drawable.ball, 100,100);
+        ball = defineBitmap(R.drawable.ball_ball, 100,100);
         ballX = 50;
         ballY = dHeight/2 - ball.getHeight()/2;
 
