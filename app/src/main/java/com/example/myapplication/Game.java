@@ -11,7 +11,11 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.myapplication.blokjes.Blokje;
+import com.example.myapplication.blokjes.Block;
+import com.example.myapplication.blokjes.Finish;
+import com.example.myapplication.blokjes.Hard;
+import com.example.myapplication.blokjes.Medium;
+import com.example.myapplication.blokjes.Soft;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +30,7 @@ class Game extends View {
     int dWidth, dHeight;
 
 //  voor het updaten van het scherm in miliseconde:
-    final int UPDATE_MILLIS = 1;
+    final long UPDATE_MILLIS = 1/3000;
 
 //  bal
     Bitmap ball;
@@ -39,8 +43,8 @@ class Game extends View {
     int ballX, ballY;
 
 //  Blocks
-    Bitmap blockStandard;
-    List<Blokje> blocks = new ArrayList<>();
+    Bitmap blockStandard,finish;
+    List<Block> blocks = new ArrayList<>();
     int bHeight, bWidth;
     boolean hitBlock;
 
@@ -71,33 +75,28 @@ class Game extends View {
         bHeight = dHeight/100*18;
         bWidth = dWidth/20;
 
-        ball = defineBitmap(R.drawable.ball, 100,100);
+        ball = defineBitmap(R.drawable.ball_full, 100,100);
         ballX = 50;
         ballY = dHeight/2 - ball.getHeight()/2;
 
         maxCursor = defineBitmap(R.drawable.ball, 50, 50);
-        maxCursorX = -20;
-        maxCurosrY = -20;
+        maxCursorX = -1000;
 
         bigCursor = defineBitmap(R.drawable.ball, 40, 40);
-        bigCursorX = -20;
-        bigCursorY = -20;
-
+        bigCursorX = -1000;
         medCursor = defineBitmap(R.drawable.ball, 30, 30);
-        medCursorX = -20;
-        medCursorY = -20;
+        medCursorX = -1000;
 
         minCursor = defineBitmap(R.drawable.ball, 20, 20);
-        minCursorX = -20;
-        minCursorY = -20;
+        minCursorX = -1000;
 
         blockStandard = defineBitmap(R.drawable.block, bWidth, bHeight);
+        finish = defineBitmap(R.drawable.block2, 300, 300);
 
-        blocks.add(new Blokje(dWidth/2, dHeight/100*25, bWidth, bHeight));
-        blocks.add(new Blokje(dWidth/2, dHeight/100*50, bWidth, bHeight));
-        blocks.add(new Blokje(dWidth/2, dHeight/100*75, bWidth, bHeight));
-
-//        finish = defineBitmap(R.drawable.block, 200, 200);
+        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
+        blocks.add(new Soft(dWidth/2, dHeight/100*50, bWidth, bHeight));
+        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
+        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300));
     }
 
     public void checkBounce(){
@@ -154,14 +153,65 @@ class Game extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        for(int i = 0; i< blocks.size(); i++) {
+            blocks.get(i).bounce(speedX, speedY, ballX, ballY, ball.getWidth(), ball.getHeight(), goingUp, goingForward);
+        }
         super.onDraw(canvas);
         checkBounce();
         for(int i = 0; i< blocks.size(); i++){
-            hitBlock = blocks.get(i).hit(ballX, ballY,ball.getWidth(), ball.getHeight());
-            if(hitBlock){
-                blocks.get(i).remove();
+            if(blocks.get(i) instanceof Finish){
+                hitBlock = ((Finish)blocks.get(i)).hit(ballX, ballY,ball.getWidth(), ball.getHeight(), 100);
+                if(hitBlock){
+                    touched = false;
+                }
+                canvas.drawBitmap(finish, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
+            }else{
+                hitBlock = blocks.get(i).hit(ballX, ballY,ball.getWidth(), ball.getHeight());
+                if(hitBlock) {
+                    if (blocks.get(i).isFromLeft()){
+                        if (goingForward) {
+                            goingForward = false;
+                            blocks.get(i).setFromLeft(false);
+                        }
+                        else {
+                            goingForward = true;
+                            blocks.get(i).setFromLeft(false);
+                        }
+                    }
+                    else if (blocks.get(i).isFromRight()){
+                        if (goingForward) {
+                            goingForward = false;
+                            blocks.get(i).setFromRight(false);
+                        }
+                        else {
+                            goingForward = true;
+                            blocks.get(i).setFromRight(false);
+                        }
+                    }
+                    if (blocks.get(i).isFromUp()){
+                        if (goingUp) {
+                            goingUp = false;
+                            blocks.get(i).setFromUp(false);
+                        }
+                        else {
+                            goingUp = true;
+                            blocks.get(i).setFromUp(false);
+                        }
+                    }
+                    else if (blocks.get(i).isFromDown()){
+                        if (goingUp) {
+                            goingUp = false;
+                            blocks.get(i).setFromDown(false);
+                        }
+                        else {
+                            goingUp = true;
+                            blocks.get(i).setFromDown(false);
+                        }
+                    }
+                    blocks.get(i).remove();
+                }
+                canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
             }
-            canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
         }
 //        canvas.drawBitmap(finish, dWidth /10 *9 , dHeight/2 - finish.getHeight()/2  , null);
         canvas.drawBitmap(ball, ballX, ballY, null);
