@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -17,6 +18,6 @@ public class StartGame extends Activity {
         super.onCreate(savedInstanceState);
         game = new Game(this);
         setContentView(R.layout.activity_game_view);
-        addContentView(game, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        addContentView(game, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 }

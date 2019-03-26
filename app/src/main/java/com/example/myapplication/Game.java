@@ -160,7 +160,7 @@ class Game extends View {
         checkBounce();
         for(int i = 0; i< blocks.size(); i++){
             if(blocks.get(i) instanceof Finish){
-                hitBlock = ((Finish)blocks.get(i)).hit(ballX, ballY,ball.getWidth(), ball.getHeight(), 10);
+                hitBlock = ((Finish)blocks.get(i)).hit(ballX, ballY,ball.getWidth(), ball.getHeight(), 100);
                 if(hitBlock){
                     touched = false;
                 }
