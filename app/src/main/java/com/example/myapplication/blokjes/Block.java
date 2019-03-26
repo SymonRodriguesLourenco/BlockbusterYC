@@ -1,14 +1,20 @@
 package com.example.myapplication.blokjes;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 
-public abstract class Block extends Activity {
+import com.example.myapplication.R;
+
+public abstract class Block extends Activity{
 
     int width, height;
     int minX, minY, maxX, maxY;
     int hitsLeft;
     boolean fromUp, fromLeft, fromDown, fromRight;
+    Bitmap blockStandard;
 
     public Block(int X, int Y, int width, int height, int hitsLeft) {
         this.width = width;
@@ -78,7 +84,6 @@ public abstract class Block extends Activity {
             return false;
         }
     }
-
 
     public void bounce(int speedX, int speedY, int ballX, int ballY, int width, int height, boolean goingUp, boolean goingRight){
         reset();
@@ -160,7 +165,4 @@ public abstract class Block extends Activity {
         fromUp = false;
         fromDown = false;
     }
-
-
-
 }

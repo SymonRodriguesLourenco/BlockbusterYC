@@ -43,7 +43,7 @@ class Game extends View {
     int ballX, ballY;
 
 //  Blocks
-    Bitmap blockStandard;
+    Bitmap blockStandard,finish;
     List<Block> blocks = new ArrayList<>();
     int bHeight, bWidth;
     boolean hitBlock;
@@ -91,12 +91,12 @@ class Game extends View {
         minCursorX = -1000;
 
         blockStandard = defineBitmap(R.drawable.block, bWidth, bHeight);
+        finish = defineBitmap(R.drawable.block2, 300, 300);
 
         blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
-        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight));
+        blocks.add(new Soft(dWidth/2, dHeight/100*50, bWidth, bHeight));
         blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
-
-//        finish = defineBitmap(R.drawable.block, 200, 200);
+        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300));
     }
 
     public void checkBounce(){
@@ -159,51 +159,59 @@ class Game extends View {
         super.onDraw(canvas);
         checkBounce();
         for(int i = 0; i< blocks.size(); i++){
-            hitBlock = blocks.get(i).hit(ballX, ballY,ball.getWidth(), ball.getHeight());
-            if(hitBlock) {
-                if (blocks.get(i).isFromLeft()){
-                    if (goingForward) {
-                        goingForward = false;
-                        blocks.get(i).setFromLeft(false);
-                    }
-                    else {
-                        goingForward = true;
-                        blocks.get(i).setFromLeft(false);
-                    }
+            if(blocks.get(i) instanceof Finish){
+                hitBlock = ((Finish)blocks.get(i)).hit(ballX, ballY,ball.getWidth(), ball.getHeight(), 10);
+                if(hitBlock){
+                    touched = false;
                 }
-                else if (blocks.get(i).isFromRight()){
-                    if (goingForward) {
-                        goingForward = false;
-                        blocks.get(i).setFromRight(false);
+                canvas.drawBitmap(finish, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
+            }else{
+                hitBlock = blocks.get(i).hit(ballX, ballY,ball.getWidth(), ball.getHeight());
+                if(hitBlock) {
+                    if (blocks.get(i).isFromLeft()){
+                        if (goingForward) {
+                            goingForward = false;
+                            blocks.get(i).setFromLeft(false);
+                        }
+                        else {
+                            goingForward = true;
+                            blocks.get(i).setFromLeft(false);
+                        }
                     }
-                    else {
-                        goingForward = true;
-                        blocks.get(i).setFromRight(false);
+                    else if (blocks.get(i).isFromRight()){
+                        if (goingForward) {
+                            goingForward = false;
+                            blocks.get(i).setFromRight(false);
+                        }
+                        else {
+                            goingForward = true;
+                            blocks.get(i).setFromRight(false);
+                        }
                     }
+                    if (blocks.get(i).isFromUp()){
+                        if (goingUp) {
+                            goingUp = false;
+                            blocks.get(i).setFromUp(false);
+                        }
+                        else {
+                            goingUp = true;
+                            blocks.get(i).setFromUp(false);
+                        }
+                    }
+                    else if (blocks.get(i).isFromDown()){
+                        if (goingUp) {
+                            goingUp = false;
+                            blocks.get(i).setFromDown(false);
+                        }
+                        else {
+                            goingUp = true;
+                            blocks.get(i).setFromDown(false);
+                        }
+                    }
+                    blocks.get(i).remove();
                 }
-                if (blocks.get(i).isFromUp()){
-                    if (goingUp) {
-                        goingUp = false;
-                        blocks.get(i).setFromUp(false);
-                    }
-                    else {
-                        goingUp = true;
-                        blocks.get(i).setFromUp(false);
-                    }
-                }
-                else if (blocks.get(i).isFromDown()){
-                    if (goingUp) {
-                        goingUp = false;
-                        blocks.get(i).setFromDown(false);
-                    }
-                    else {
-                        goingUp = true;
-                        blocks.get(i).setFromDown(false);
-                    }
-                }
-                blocks.get(i).remove();
+                canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
             }
-            canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
         }
 //        canvas.drawBitmap(finish, dWidth /10 *9 , dHeight/2 - finish.getHeight()/2  , null);
         canvas.drawBitmap(ball, ballX, ballY, null);
