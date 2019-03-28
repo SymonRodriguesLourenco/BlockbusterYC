@@ -35,13 +35,8 @@ class Game extends View {
 //  bal
     Ball ball;
     Bitmap ballMap;
-//  als de bal naar links gaat is going forward false anders true, als de bal naar boven gaat i goingup true,anders false
-    Boolean goingForward = true, goingUp = false, fired = false;
 //  waarde die per x aantal miliseconde toegevoegt wil worden
     int speedX = 0, speedY = 0;
-    double standardSpeed = Math.sqrt(800);
-//  de coordinaten van de bal
-    int ballX, ballY;
 
 //  Blocks
     Bitmap blockStandard,finish;
