@@ -13,7 +13,6 @@ import android.view.View;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
-import com.example.myapplication.blokjes.Hard;
 import com.example.myapplication.blokjes.Medium;
 import com.example.myapplication.blokjes.Soft;
 
@@ -33,7 +32,8 @@ class Game extends View {
     final long UPDATE_MILLIS = 1/3000;
 
 //  bal
-    Bitmap ball;
+    Ball ball;
+    Bitmap ballMap;
 //  als de bal naar links gaat is going forward false anders true, als de bal naar boven gaat i goingup true,anders false
     Boolean goingForward = true, goingUp = false, fired = false;
 //  waarde die per x aantal miliseconde toegevoegt wil worden
@@ -68,16 +68,17 @@ class Game extends View {
         };
         display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
         point = new Point();
+        ball = new Ball(100, 100);
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
 
+        ball.startPosition(dHeight);
+
         bHeight = dHeight/100*18;
         bWidth = dWidth/20;
 
-        ball = defineBitmap(R.drawable.ball_full, 100,100);
-        ballX = 50;
-        ballY = dHeight/2 - ball.getHeight()/2;
+        ballMap = defineBitmap(R.drawable.ball_full, ball.getWidth(),ball.getHeight());
 
         maxCursor = defineBitmap(R.drawable.ball, 50, 50);
         maxCursorX = -1000;
@@ -93,118 +94,68 @@ class Game extends View {
         blockStandard = defineBitmap(R.drawable.block, bWidth, bHeight);
         finish = defineBitmap(R.drawable.block2, 300, 300);
 
-        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
-        blocks.add(new Soft(dWidth/2, dHeight/100*50, bWidth, bHeight));
+        blocks.add(new Soft(dWidth/2, dHeight/100*25, bWidth, bHeight));
+        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight));
         blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
         blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300));
-    }
-
-    public void checkBounce(){
-        if(touched) {
-//          checken of de bal rechts uit het scherm is:
-            int minX = 0;
-            int minY = 0;
-            int maxX = dWidth - ball.getWidth();
-            int maxY = dHeight - ball.getHeight()*2;
-
-//          bal gaat naar link
-            if ((ballX - speedX) < minX) {
-                if ((ballX - speedX) < minX) {
-                    ballX = minX;
-                }
-                goingForward = true;
-            }
-//          bal gaat naar rechts
-            if ((ballX + speedX) >= maxX) {
-                if ((ballX + speedX) > maxX) {
-                    ballX = maxX;
-                }
-                goingForward = false;
-            }
-
-//          bal gaat naar boven
-            if ((ballY - speedY) < minY) {
-                if ((ballY - speedY) < minY) {
-                    ballY = minY;
-                }
-                goingUp = false;
-            }
-//          bal gaat naar onder
-            if ((ballY + speedY) >= maxY) {
-                if ((ballY + speedY) > maxY) {
-                    ballY = maxY;
-                }
-                goingUp = true;
-            }
-            if (goingForward) {
-                ballX += speedX;
-            }
-            else if (!goingForward) {
-                ballX -= speedX;
-            }
-            if (!goingUp) {
-                ballY += speedY;
-            }
-            else if (goingUp) {
-                ballY -= speedY;
-            }
-        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         for(int i = 0; i< blocks.size(); i++) {
-            blocks.get(i).bounce(speedX, speedY, ballX, ballY, ball.getWidth(), ball.getHeight(), goingUp, goingForward);
+            blocks.get(i).bounce(ball.getSpeedX(), ball.getSpeedY(), ball.getBallX(), ball.getBallY(), ball.getWidth(), ball.getHeight(), ball.isGoingUp(), ball.isGoingForward());
         }
         super.onDraw(canvas);
-        checkBounce();
+        if(touched) {
+            ball.borderBounce(dWidth, dHeight);
+        }
         for(int i = 0; i< blocks.size(); i++){
             if(blocks.get(i) instanceof Finish){
-                hitBlock = ((Finish)blocks.get(i)).hit(ballX, ballY,ball.getWidth(), ball.getHeight(), 100);
+                hitBlock = ((Finish)blocks.get(i)).hit(ball.getBallX(), ball.getBallY(), ball.getWidth(), ball.getHeight(), 50);
                 if(hitBlock){
                     touched = false;
                 }
                 canvas.drawBitmap(finish, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
             }else{
-                hitBlock = blocks.get(i).hit(ballX, ballY,ball.getWidth(), ball.getHeight());
+                hitBlock = blocks.get(i).hit(ball.getBallX(), ball.getBallY(), ball.getWidth(), ball.getHeight());
                 if(hitBlock) {
                     if (blocks.get(i).isFromLeft()){
-                        if (goingForward) {
-                            goingForward = false;
+                        if (ball.isGoingForward()) {
+                            ball.setGoingForward(false);
                             blocks.get(i).setFromLeft(false);
                         }
                         else {
-                            goingForward = true;
+                            ball.setGoingForward(true);
                             blocks.get(i).setFromLeft(false);
                         }
                     }
                     else if (blocks.get(i).isFromRight()){
-                        if (goingForward) {
-                            goingForward = false;
+                        if (ball.isGoingForward()) {
+                            ball.setGoingForward(false);
                             blocks.get(i).setFromRight(false);
                         }
                         else {
-                            goingForward = true;
+                            ball.setGoingForward(true);
                             blocks.get(i).setFromRight(false);
                         }
                     }
                     if (blocks.get(i).isFromUp()){
-                        if (goingUp) {
-                            goingUp = false;
+                        if (ball.isGoingUp()) {
+                            ball.setGoingUp(false);
                             blocks.get(i).setFromUp(false);
                         }
                         else {
-                            goingUp = true;
+                            ball.setGoingUp(true);
                             blocks.get(i).setFromUp(false);
                         }
                     }
                     else if (blocks.get(i).isFromDown()){
-                        if (goingUp) {
-                            goingUp = false;
+                        if (ball.isGoingUp()) {
+                            ball.setGoingUp(false);
                             blocks.get(i).setFromDown(false);
                         }
                         else {
-                            goingUp = true;
+                            ball.setGoingUp(true);
                             blocks.get(i).setFromDown(false);
                         }
                     }
@@ -213,8 +164,7 @@ class Game extends View {
                 canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
             }
         }
-//        canvas.drawBitmap(finish, dWidth /10 *9 , dHeight/2 - finish.getHeight()/2  , null);
-        canvas.drawBitmap(ball, ballX, ballY, null);
+        canvas.drawBitmap(ballMap, ball.getBallX(), ball.getBallY(), null);
         canvas.drawBitmap(maxCursor, maxCursorX, maxCurosrY, null);
         canvas.drawBitmap(bigCursor, bigCursorX, bigCursorY, null);
         canvas.drawBitmap(medCursor, medCursorX, medCursorY, null);
@@ -236,10 +186,10 @@ class Game extends View {
         int intervalx = (50 + ball.getWidth() / 2 - x);
         int intervaly = (dHeight / 2 - y);
         double slope = Math.sqrt(intervalx * intervalx + intervaly * intervaly);
-        double vergroting = standardSpeed / slope;
+        double vergroting = ball.getStandardspeed() / slope;
         double vergrootx = vergroting * intervalx;
         double vergrooty = vergroting * intervaly;
-        if (fired == false) {
+        if (!ball.isFired()) {
             bigCursorX = -(int)vergrootx *65/10 + (ball.getWidth()/2+50 - bigCursor.getWidth()/2);
             bigCursorY = -(int)vergrooty *65/10 + (dHeight/2 - bigCursor.getHeight()/2);
             medCursorX = -(int)vergrootx *4 + (ball.getWidth()/2+50 - medCursor.getWidth()/2);
@@ -250,23 +200,25 @@ class Game extends View {
             maxCurosrY = -(int)vergrooty *95/10 + (dHeight/2 - maxCursor.getHeight()/2);
         }
         if (action == MotionEvent.ACTION_UP){
-            if (fired == false) {
+            if (!ball.isFired()) {
                 speedX = -(int)vergrootx;
                 speedY = -(int)vergrooty;
                 if (speedY < 0){
                     speedY *= -1;
-                    goingUp = true;
+                    ball.setGoingUp(true);
                 }
                 if (speedX < 0) {
                     speedX *= -1;
-                    goingForward = false;
+                    ball.setGoingForward(false);
                 }
+                ball.setSpeedY(speedY);
+                ball.setSpeedX(speedX);
                 maxCursorX = -80;
                 bigCursorX = -80;
                 medCursorX = -80;
                 minCursorX = -80;
             }
-            fired = true;
+            ball.setFired(true);
             touched = true;
         }
         return true;

@@ -12,7 +12,4 @@ public class GameView extends Activity {
         setContentView(R.layout.activity_game_view);
     }
 
-    public static void explode(){
-        
-    }
 }

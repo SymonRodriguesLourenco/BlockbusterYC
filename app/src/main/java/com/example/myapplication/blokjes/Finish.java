@@ -9,7 +9,7 @@ public class Finish extends Block {
 
     public boolean hit(int balX,int balY, int width, int height, int per){
         per = 100 - per;
-        if (minX < balX+width/100*per && balX+width/100*per < maxX && minY > balY+height/100*per && balY+height/100*per > maxY) {
+        if (minX < balX+width/100*per && balX+width/100*per < maxX &&  balY+height/100*(100-per) < minY && balY+height/100*per > maxY) {
             return true;
         }
         else{
