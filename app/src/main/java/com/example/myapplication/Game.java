@@ -94,7 +94,7 @@ class Game extends View {
         finish = defineBitmap(R.drawable.block2, 300, 300);
 
         blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
-        blocks.add(new Soft(dWidth/2, dHeight/100*50, bWidth, bHeight));
+        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight));
         blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
         blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300));
     }
@@ -105,7 +105,7 @@ class Game extends View {
             int minX = 0;
             int minY = 0;
             int maxX = dWidth - ball.getWidth();
-            int maxY = dHeight - ball.getHeight()*2;
+            int maxY = dHeight - ball.getHeight();
 
 //          bal gaat naar link
             if ((ballX - speedX) < minX) {

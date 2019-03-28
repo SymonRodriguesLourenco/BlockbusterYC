@@ -15,7 +15,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/app_name"
-        android:onClick="startGame"
         app:srcCompat="@android:drawable/ic_media_play" />
 
     <TextView
