@@ -16,8 +16,8 @@ public class Ball {
         this.speedY = 0;
         this.standardspeed = Math.sqrt(800);
         this.fired = false;
-        goingUp = false;
-        goingForward = true;
+        this.goingUp = false;
+        this.goingForward = true;
     }
 
     public int getBallX() {
