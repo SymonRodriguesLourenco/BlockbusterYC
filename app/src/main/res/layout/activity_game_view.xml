@@ -6,98 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:context=".StartGame">
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="84dp"
-        android:fontFamily="@font/luckiest_guy"
-        android:paddingTop="2dp"
-        android:text="Level : 1"
-        android:textAlignment="center"
-        android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="501dp"
-        android:layout_marginTop="0dp"
-        android:fontFamily="@font/luckiest_guy"
-        android:paddingTop="2dp"
-        android:text="Highscore  : 1"
-        android:textAlignment="center"
-        android:textSize="20sp" />
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="40dp"
-        android:src="@drawable/hearticon"
-        tools:layout_editor_absoluteX="613dp" />
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="60dp"
-        android:src="@drawable/hearticon"
-        tools:layout_editor_absoluteX="648dp" />
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/hearticon"
-        tools:layout_editor_absoluteX="680dp" />
-    <ImageView
-        android:id="@+id/linkerbal"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="2dp"
-        android:src="@drawable/ball" />
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="42dp"
-        android:layout_marginTop="2dp"
-        android:src="@drawable/ball" />
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="2dp"
-        android:src="@drawable/ball" />
-
-    <ImageButton
-        android:id="@+id/imagebutton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="false"
-        android:contentDescription="My application"
-        app:srcCompat="@android:drawable/ic_media_play" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="25dp"
@@ -105,5 +14,98 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:orientation="vertical"/>
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/poging1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/ball_full" />
+
+            <ImageView
+                android:id="@+id/poging2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="42dp"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/ball_full" />
+
+            <ImageView
+                android:id="@+id/poging3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/ball_full" />
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="84dp"
+                android:fontFamily="@font/luckiest_guy"
+                android:layout_marginTop="-2dp"
+                android:text="Level : 1"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/leven1"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="64dp"
+                android:src="@drawable/hearticon"
+                tools:layout_editor_absoluteX="648dp" />
+
+            <ImageView
+                android:id="@+id/leven2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="42dp"
+                android:src="@drawable/hearticon"
+                tools:layout_editor_absoluteX="613dp" />
+
+            <ImageView
+                android:id="@+id/leven3"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/hearticon"
+                tools:layout_editor_absoluteX="680dp" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="false"
+                android:layout_marginTop="-2dp"
+                android:fontFamily="@font/luckiest_guy"
+                android:text="Highscore  : 1"
+                android:textAlignment="center"
+                android:textSize="20dp" />
+        </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

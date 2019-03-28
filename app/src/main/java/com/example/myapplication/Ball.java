@@ -39,6 +39,8 @@ public class Ball {
     public void startPosition(int dheight) {
         this.ballX = 50;
         this.ballY = dheight/2 - height/2;
+        this.goingForward = true;
+        this.goingUp = false;
     }
 
     public boolean isGoingForward() {
@@ -85,19 +87,21 @@ public class Ball {
         return height;
     }
 
-    public void borderBounce(int dWidth, int dHeight){
+    public boolean borderBounce(int dWidth, int dHeight){
 //      checken of de bal uit het scherm is:
         int minX = 0;
         int minY = 0;
         int maxX = dWidth - width;
         int maxY = dHeight - height;
+        boolean uitkomst = false;
 
 //          bal gaat naar links
-        if ((ballX - speedX) < minX) {
+        if ((ballX - speedX) < minX - (this.width *2)) {
             if ((ballX - speedX) < minX) {
-                ballX = minX;
+//                ballX = minX;
+                uitkomst = true;
+                StartGame.verander();
             }
-            goingForward = true;
         }
 //          bal gaat naar rechts
         if ((ballX + speedX) >= maxX) {
@@ -133,6 +137,7 @@ public class Ball {
         else if (goingUp) {
             ballY -= speedY;
         }
+        return uitkomst;
     }
 
 }

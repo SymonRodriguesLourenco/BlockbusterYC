@@ -103,7 +103,10 @@ class Game extends View {
         }
         super.onDraw(canvas);
         if(touched && !isFinished) {
-            ball.borderBounce(dWidth, dHeight);
+            boolean uitkomst = ball.borderBounce(dWidth, dHeight);
+            if (uitkomst) {
+                reset();
+            }
         }
         for(int i = 0; i< blocks.size(); i++){
             if(blocks.get(i) instanceof Finish){
@@ -218,5 +221,13 @@ class Game extends View {
             touched = true;
         }
         return true;
+    }
+
+    public void reset(){
+        ball.setSpeedX(0);
+        ball.setSpeedY(0);
+        ball.startPosition(dHeight);
+        touched= false;
+        ball.setFired(false);
     }
 }
