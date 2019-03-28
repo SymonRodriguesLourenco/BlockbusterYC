@@ -55,7 +55,7 @@ class Game extends View {
     int maxCursorX, maxCurosrY, bigCursorX, bigCursorY, medCursorX, medCursorY, minCursorX, minCursorY;
 
 //  of het spel gestart is en de bal weggeschoten is
-    boolean touched;
+    boolean touched, isFinished=false;
 
 
     public Game(Context context) {
@@ -107,14 +107,14 @@ class Game extends View {
             blocks.get(i).bounce(ball.getSpeedX(), ball.getSpeedY(), ball.getBallX(), ball.getBallY(), ball.getWidth(), ball.getHeight(), ball.isGoingUp(), ball.isGoingForward());
         }
         super.onDraw(canvas);
-        if(touched) {
+        if(touched && !isFinished) {
             ball.borderBounce(dWidth, dHeight);
         }
         for(int i = 0; i< blocks.size(); i++){
             if(blocks.get(i) instanceof Finish){
                 hitBlock = ((Finish)blocks.get(i)).hit(ball.getBallX(), ball.getBallY(), ball.getWidth(), ball.getHeight(), 50);
                 if(hitBlock){
-                    touched = false;
+                    isFinished = true;
                 }
                 canvas.drawBitmap(finish, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
             }else{
