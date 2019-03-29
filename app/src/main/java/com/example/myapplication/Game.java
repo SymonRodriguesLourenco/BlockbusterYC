@@ -71,8 +71,8 @@ class Game extends View {
         };
         display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
         point = new Point();
-        ball = new Ball(100, 100, "none");
-        extraball = new Ball(100, 100, "none");
+        ball = new Ball(100, 100, "powerball");
+        extraball = new Ball(100, 100, "powerball");
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
@@ -104,7 +104,7 @@ class Game extends View {
         finish = defineBitmap(R.drawable.block2, 300, 300);
 
         blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
-        blocks.add(new Powerupblock(dWidth/2, dHeight/100*50, bWidth, bHeight, 1, "multiball"));
+        blocks.add(new Powerupblock(dWidth/2, dHeight/100*50, bWidth, bHeight, 1, "powerball"));
         blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
         blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300));
     }
@@ -171,6 +171,8 @@ class Game extends View {
                                 life++;
                             case "multiball":
                                 ballList.add(extraball);
+                            case "powerball":
+                                ballList.get(a).setBallPowerball("powerball");
                         }
                     }
                     canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(), null);

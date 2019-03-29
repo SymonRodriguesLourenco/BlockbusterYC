@@ -24,6 +24,7 @@ public abstract class Block extends Activity{
         this.maxX = minX + width;
         this.maxY = Y - height/2;
         this.minY = maxY + height;
+        this.hitsLeft = hitsLeft;
     }
 
     public int getMinX() {
@@ -32,6 +33,10 @@ public abstract class Block extends Activity{
 
     public int getMaxY() {
         return maxY;
+    }
+
+    public int getHitsLeft() {
+        return getHitsLeft();
     }
 
     public boolean isFromUp() {
@@ -64,6 +69,10 @@ public abstract class Block extends Activity{
 
     public void setFromRight(boolean fromRight) {
         this.fromRight = fromRight;
+    }
+
+    public void setHitsLeft(int hitsLeft) {
+        this.hitsLeft = hitsLeft;
     }
 
     public void remove() {
