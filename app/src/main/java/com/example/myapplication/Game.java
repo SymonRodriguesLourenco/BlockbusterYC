@@ -71,8 +71,8 @@ class Game extends View {
         };
         display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
         point = new Point();
-        ball = new Ball(100, 100);
-        extraball = new Ball(100, 100);
+        ball = new Ball(100, 100, "none");
+        extraball = new Ball(100, 100, "none");
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
