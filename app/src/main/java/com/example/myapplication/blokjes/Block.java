@@ -14,7 +14,7 @@ public abstract class Block extends Activity{
     int minX, minY, maxX, maxY;
     int hitsLeft;
     boolean fromUp, fromLeft, fromDown, fromRight;
-    Bitmap blockStandard;
+    String powerup = "";
 
     public Block(int X, int Y, int width, int height, int hitsLeft) {
         this.width = width;
@@ -74,9 +74,14 @@ public abstract class Block extends Activity{
             this.minY = -200;
             this.maxY = -100;
         }
+
     }
 
-    public boolean hit(int balX,int balY, int width, int height){
+    public String getPowerup (){
+        return powerup;
+    }
+
+    public boolean hit(int balX, int balY, int width, int height){
         if (minX < balX+width && balX < maxX && minY > balY && balY+height > maxY) {
             return true;
         }

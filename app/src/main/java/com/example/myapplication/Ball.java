@@ -3,7 +3,8 @@ package com.example.myapplication;
 public class Ball {
 
     private int ballX, ballY;
-    private int width, height;
+    private int width;
+    private int height;
     private int speedX, speedY;
     private double standardspeed;
     private boolean goingForward, goingUp;
@@ -122,16 +123,16 @@ public class Ball {
             goingUp = true;
         }
         if (goingForward) {
-            ballX += speedX;
+            this.ballX += speedX;
         }
         else if (!goingForward) {
-            ballX -= speedX;
+            this.ballX -= speedX;
         }
         if (!goingUp) {
-            ballY += speedY;
+            this.ballY += speedY;
         }
         else if (goingUp) {
-            ballY -= speedY;
+            this.ballY -= speedY;
         }
     }
 
