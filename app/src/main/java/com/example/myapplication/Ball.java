@@ -7,8 +7,16 @@ public class Ball {
     private int speedX, speedY;
     private double standardspeed;
     private boolean goingForward, goingUp;
-    private boolean fired;
+    private boolean fired, uitscherm;
     private String ballPowerup;
+
+    public boolean isUitscherm() {
+        return uitscherm;
+    }
+
+    public void setUitscherm(boolean uitscherm) {
+        this.uitscherm = uitscherm;
+    }
 
     public Ball(int width, int height, String ballPowerup) {
         this.width = width;
@@ -20,6 +28,7 @@ public class Ball {
         this.goingUp = false;
         this.goingForward = true;
         this.ballPowerup = ballPowerup;
+        this.uitscherm = true;
     }
 
     public int getBallX() {
@@ -43,6 +52,7 @@ public class Ball {
     }
 
     public void startPosition(int dheight) {
+        this.uitscherm = false;
         this.ballX = 50;
         this.ballY = dheight/2 - height/2;
         this.goingForward = true;
@@ -85,7 +95,7 @@ public class Ball {
         return standardspeed;
     }
 
-    public void setBallPowerball(String ballPowerup){
+    public void setBallPowerup(String ballPowerup){
         this.ballPowerup = ballPowerup;
     }
 
@@ -151,6 +161,11 @@ public class Ball {
             this.ballY -= speedY;
         }
         return uitkomst;
+    }
+
+    public void setPos(int ballX, int ballY) {
+        this.ballX = ballX;
+        this.ballY = ballY;
     }
 
 }
