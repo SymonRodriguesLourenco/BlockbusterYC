@@ -36,7 +36,7 @@ public abstract class Block extends Activity{
     }
 
     public int getHitsLeft() {
-        return getHitsLeft();
+        return hitsLeft;
     }
 
     public boolean isFromUp() {
@@ -76,14 +76,12 @@ public abstract class Block extends Activity{
     }
 
     public void remove() {
-        this.hitsLeft--;
         if(this.hitsLeft == 0){
             this.minX = -300;
             this.maxX = -200;
             this.minY = -200;
             this.maxY = -100;
         }
-
     }
 
     public String getPowerup (){

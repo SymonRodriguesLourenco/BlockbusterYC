@@ -129,38 +129,46 @@ class Game extends View {
                 } else {
                     hitBlock = blocks.get(i).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight());
                     if (hitBlock) {
-                        if (blocks.get(i).isFromLeft()) {
-                            if (ballList.get(a).isGoingForward()) {
-                                ballList.get(a).setGoingForward(false);
-                                blocks.get(i).setFromLeft(false);
-                            } else {
-                                ballList.get(a).setGoingForward(true);
-                                blocks.get(i).setFromLeft(false);
-                            }
-                        } else if (blocks.get(i).isFromRight()) {
-                            if (ballList.get(a).isGoingForward()) {
-                                ballList.get(a).setGoingForward(false);
-                                blocks.get(i).setFromRight(false);
-                            } else {
-                                ballList.get(a).setGoingForward(true);
-                                blocks.get(i).setFromRight(false);
-                            }
+                        int hits = blocks.get(i).getHitsLeft();
+                        hits--;
+                        blocks.get(i).setHitsLeft(hits);
+                        if (ballList.get(a).getBallPowerup()=="powerball"){
+                            blocks.get(i).setHitsLeft(0);
                         }
-                        if (blocks.get(i).isFromUp()) {
-                            if (ballList.get(a).isGoingUp()) {
-                                ballList.get(a).setGoingUp(false);
-                                blocks.get(i).setFromUp(false);
-                            } else {
-                                ballList.get(a).setGoingUp(true);
-                                blocks.get(i).setFromUp(false);
+                        else {
+                            if (blocks.get(i).isFromLeft()) {
+                                if (ballList.get(a).isGoingForward()) {
+                                    ballList.get(a).setGoingForward(false);
+                                    blocks.get(i).setFromLeft(false);
+                                } else {
+                                    ballList.get(a).setGoingForward(true);
+                                    blocks.get(i).setFromLeft(false);
+                                }
+                            } else if (blocks.get(i).isFromRight()) {
+                                if (ballList.get(a).isGoingForward()) {
+                                    ballList.get(a).setGoingForward(false);
+                                    blocks.get(i).setFromRight(false);
+                                } else {
+                                    ballList.get(a).setGoingForward(true);
+                                    blocks.get(i).setFromRight(false);
+                                }
                             }
-                        } else if (blocks.get(i).isFromDown()) {
-                            if (ballList.get(a).isGoingUp()) {
-                                ballList.get(a).setGoingUp(false);
-                                blocks.get(i).setFromDown(false);
-                            } else {
-                                ballList.get(a).setGoingUp(true);
-                                blocks.get(i).setFromDown(false);
+                            if (blocks.get(i).isFromUp()) {
+                                if (ballList.get(a).isGoingUp()) {
+                                    ballList.get(a).setGoingUp(false);
+                                    blocks.get(i).setFromUp(false);
+                                } else {
+                                    ballList.get(a).setGoingUp(true);
+                                    blocks.get(i).setFromUp(false);
+                                }
+                            } else if (blocks.get(i).isFromDown()) {
+                                if (ballList.get(a).isGoingUp()) {
+                                    ballList.get(a).setGoingUp(false);
+                                    blocks.get(i).setFromDown(false);
+                                } else {
+                                    ballList.get(a).setGoingUp(true);
+                                    blocks.get(i).setFromDown(false);
+                                }
                             }
                         }
                         blocks.get(i).remove();

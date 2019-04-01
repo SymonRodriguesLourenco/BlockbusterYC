@@ -20,7 +20,7 @@ public class Ball {
         this.fired = false;
         this.goingUp = false;
         this.goingForward = true;
-        this.ballPowerup = "none";
+        this.ballPowerup = ballPowerup;
     }
 
     public int getBallX() {
@@ -40,7 +40,7 @@ public class Ball {
     }
 
     public String getBallPowerup() {
-        return getBallPowerup();
+        return ballPowerup;
     }
 
     public void startPosition(int dheight) {
