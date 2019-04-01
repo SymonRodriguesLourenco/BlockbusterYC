@@ -8,8 +8,9 @@ public class Ball {
     private double standardspeed;
     private boolean goingForward, goingUp;
     private boolean fired;
+    private String ballPowerup;
 
-    public Ball(int width, int height) {
+    public Ball(int width, int height, String ballPowerup) {
         this.width = width;
         this.height = height;
         this.speedX = 0;
@@ -18,6 +19,7 @@ public class Ball {
         this.fired = false;
         this.goingUp = false;
         this.goingForward = true;
+        this.ballPowerup = ballPowerup;
     }
 
     public int getBallX() {
@@ -36,7 +38,9 @@ public class Ball {
         return speedY;
     }
 
-
+    public String getBallPowerup() {
+        return ballPowerup;
+    }
 
     public void startPosition(int dheight) {
         this.ballX = 50;
@@ -79,6 +83,10 @@ public class Ball {
 
     public double getStandardspeed(){
         return standardspeed;
+    }
+
+    public void setBallPowerball(String ballPowerup){
+        this.ballPowerup = ballPowerup;
     }
 
     public int getWidth(){
@@ -131,16 +139,16 @@ public class Ball {
             goingUp = true;
         }
         if (goingForward) {
-            ballX += speedX;
+            this.ballX += speedX;
         }
         else if (!goingForward) {
-            ballX -= speedX;
+            this.ballX -= speedX;
         }
         if (!goingUp) {
-            ballY += speedY;
+            this.ballY += speedY;
         }
         else if (goingUp) {
-            ballY -= speedY;
+            this.ballY -= speedY;
         }
         return uitkomst;
     }
