@@ -109,7 +109,7 @@ class Game extends View {
         minCursor = defineBitmap(R.drawable.ball, 20, 20);
         minCursorX = -1000;
 
-
+        pogingTekst.setText(pogingen+ " X");
         blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
         blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
         blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
@@ -122,7 +122,6 @@ class Game extends View {
             blocks.get(i).bounce(ball.getSpeedX(), ball.getSpeedY(), ball.getBallX(), ball.getBallY(), ball.getWidth(), ball.getHeight(), ball.isGoingUp(), ball.isGoingForward());
         }
         super.onDraw(canvas);
-        pogingTekst.setText(pogingen+ "");
         if(touched && !isFinished) {
             boolean uitkomst = ball.borderBounce(dWidth, dHeight);
             if (uitkomst) {
@@ -240,6 +239,7 @@ class Game extends View {
             }
             ball.setFired(true);
             pogingen--;
+            pogingTekst.setText(pogingen+ " X");
             poging1.setImageResource(R.drawable.ball_eaten);
 
             touched = true;
