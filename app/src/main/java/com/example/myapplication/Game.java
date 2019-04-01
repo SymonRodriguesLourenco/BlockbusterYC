@@ -12,6 +12,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
@@ -34,7 +35,8 @@ class Game extends View {
     //voor de pogingen
     public boolean endGame = false;
     public int pogingen = 3, levens = 3;
-    public ImageView poging1, poging2, poging3, leven1, leven2, leven3;
+    public ImageView poging1, leven1, leven2, leven3;
+    public TextView pogingTekst;
     public Bitmap be, bf, he, hf;
 
 //  voor het updaten van het scherm in miliseconde:
@@ -61,7 +63,7 @@ class Game extends View {
     boolean touched, isFinished=false;
 
 
-    public Game(Context context, ImageView poging1,ImageView poging2,ImageView poging3,ImageView leven1,ImageView leven2,ImageView leven3) {
+    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3) {
         super(context);
         handler = new Handler();
         runnable = new Runnable() {
@@ -78,8 +80,7 @@ class Game extends View {
         dHeight = point.y;
 
         this.poging1 = poging1;
-        this.poging2 = poging2;
-        this.poging3 = poging3;
+        this.pogingTekst = pogingTekst;
         this.leven1 = leven1;
         this.leven2 = leven2;
         this.leven3 = leven3;
@@ -124,6 +125,7 @@ class Game extends View {
             blocks.get(i).bounce(ball.getSpeedX(), ball.getSpeedY(), ball.getBallX(), ball.getBallY(), ball.getWidth(), ball.getHeight(), ball.isGoingUp(), ball.isGoingForward());
         }
         super.onDraw(canvas);
+        pogingTekst.setText(pogingen+ "");
         if(touched && !isFinished) {
             boolean uitkomst = ball.borderBounce(dWidth, dHeight);
             if (uitkomst) {
@@ -240,6 +242,9 @@ class Game extends View {
                 minCursorX = -80;
             }
             ball.setFired(true);
+            pogingen--;
+            poging1.setImageResource(R.drawable.ball_eaten);
+
             touched = true;
         }
         return true;
@@ -251,30 +256,25 @@ class Game extends View {
         ball.startPosition(dHeight);
         touched = false;
         ball.setFired(false);
-        pogingen --;
+        poging1.setImageResource(R.drawable.ball_full);
+    }
+
+    public void resetLevel() {
+        blocks.clear();
+        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
+        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight));
+        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
+        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300));
     }
 
     public void verander() {
-        switch (pogingen) {
-            case 3:
-                poging1.setImageResource(R.drawable.ball_eaten);
-                break;
-            case 2:
-                poging2.setImageResource(R.drawable.ball_eaten);
-                break;
-            case 1:
-                poging3.setImageResource(R.drawable.ball_eaten);
-                break;
-        }
-
         reset();
 
         if (pogingen == 0) {
             poging1.setImageResource(R.drawable.ball_full);
-            poging2.setImageResource(R.drawable.ball_full);
-            poging3.setImageResource(R.drawable.ball_full);
             pogingen = 3;
             levens--;
+            resetLevel();
         }
 
         if (levens == 2) {
@@ -289,4 +289,5 @@ class Game extends View {
             activity.finish();
         }
     }
+
 }
