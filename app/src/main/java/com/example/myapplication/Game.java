@@ -276,10 +276,10 @@ class Game extends View {
                     bigCursorX = -80;
                     medCursorX = -80;
                     minCursorX = -80;
+                    pogingen--;
+                    pogingTekst.setText(pogingen+ " X");
                 }
                 ballList.get(a).setFired(true);
-                pogingen--;
-                pogingTekst.setText(pogingen+ " X");
                 poging1.setImageResource(R.drawable.ball_eaten);
                 touched = true;
             }
@@ -311,6 +311,7 @@ class Game extends View {
             poging1.setImageResource(R.drawable.ball_full);
             pogingen = 3;
             levens--;
+            pogingTekst.setText(pogingen+ " X");
             resetLevel();
         }
 
