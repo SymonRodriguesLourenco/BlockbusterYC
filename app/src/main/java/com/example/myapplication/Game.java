@@ -64,12 +64,6 @@ class Game extends View {
 //  of het spel gestart is en de bal weggeschoten is
     boolean touched, isFinished=false;
 
-//  pogingen
-    int amounttry=1;
-
-//  levens
-    int life=2;
-
     public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3) {
         super(context);
         handler = new Handler();
@@ -124,7 +118,7 @@ class Game extends View {
         pogingTekst.setText(pogingen+ " X");
         blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
         blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
-        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
+        blocks.add(new Powerupblock(dWidth/2, dHeight/100*75, bWidth, bHeight, "levens", getResources()));
         blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
     }
 
@@ -196,14 +190,31 @@ class Game extends View {
                         if (blocks.get(i) instanceof Powerupblock) {
                             Powerupblock block = (Powerupblock) blocks.get(i);
                             switch (block.getPowerup()) {
-                                case "extratry":
-                                    amounttry++;
-                                case "extralife":
-                                    life++;
+                                case "pogingen":
+                                    pogingen++;
+                                    pogingTekst.setText(pogingen+ " X");
+                                    break;
+                                case "levens":
+                                    if (levens <= 3){
+                                        if (levens == 2) {
+                                            leven1.setImageResource(R.drawable.hearticon);
+                                        } else if (levens == 1) {
+                                            leven2.setImageResource(R.drawable.hearticon);
+                                        } else if (levens == 0) {
+                                            leven3.setImageResource(R.drawable.hearticon);
+                                            Intent intent = new Intent(getContext(), MainActivity.class);
+                                            getContext().startActivity(intent);
+                                            Activity activity = (Activity)getContext();
+                                            activity.finish();
+                                        }}
+                                        levens++;
+                                    break;
                                 case "multiball":
                                     ballList.add(extraball);
+                                    break;
                                 case "powerball":
                                     ballList.get(a).setBallPowerball("powerball");
+                                    break;
                             }
                         }
                         blocks.get(i).remove();
@@ -300,7 +311,7 @@ class Game extends View {
         blocks.clear();
         blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
         blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
-        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
+        blocks.add(new Powerupblock(dWidth/2, dHeight/100*75, bWidth, bHeight, "levens", getResources()));
         blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
     }
 
@@ -311,6 +322,7 @@ class Game extends View {
             poging1.setImageResource(R.drawable.ball_full);
             pogingen = 3;
             levens--;
+            pogingTekst.setText(pogingen+ " X");
             resetLevel();
         }
 
