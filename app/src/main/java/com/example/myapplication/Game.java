@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,6 +40,8 @@ class Game extends View {
     public ImageView poging1, leven1, leven2, leven3;
     public TextView pogingTekst;
     public Bitmap be, bf, he, hf;
+    int level = 0;
+    Level levels;
 
 //  voor het updaten van het scherm in miliseconde:
     final long UPDATE_MILLIS = 1/3000;
@@ -81,8 +84,6 @@ class Game extends View {
         };
         display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
         point = new Point();
-        ball = new Ball(100, 100, "");
-//        extraball = new Ball(100, 100, "");
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
@@ -98,12 +99,23 @@ class Game extends View {
         he = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon_empty);
         hf = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon);
 
-
-        ball.startPosition(dHeight);
-//        extraball.startPosition(dHeight);
-
         bHeight = dHeight/100*18;
         bWidth = dWidth/20;
+
+
+        //        ====================================================================
+        ball = new Ball(100, 100, "");
+//      extraball = new Ball(100, 100, "");
+        ball.startPosition(dHeight);
+//      extraball.startPosition(dHeight);
+//
+//        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
+//        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
+//        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
+//        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
+        levels = new Level(dWidth,dHeight, ball.getWidth(), ball.getWidth(), getResources());
+//        =====================================================================
+
 
         ballMap = defineBitmap(R.drawable.ball_full, ball.getWidth(),ball.getHeight());
 //        ballMap1 = defineBitmap(R.drawable.ball_full, extraball.getWidth(),extraball.getHeight());
@@ -122,14 +134,12 @@ class Game extends View {
         minCursorX = -1000;
 
         pogingTekst.setText(pogingen+ " X");
-        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
-        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
-        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
-        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        blocks = levels.get(level);
+        Log.d(levels.toString(), blocks.toString());
         for(int a = 0; a < ballList.size(); a++) {
             for (int i = 0; i < blocks.size(); i++) {
                 blocks.get(i).bounce(ballList.get(a).getSpeedX(), ballList.get(a).getSpeedY(), ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), ballList.get(a).isGoingUp(), ballList.get(a).isGoingForward());
@@ -298,10 +308,10 @@ class Game extends View {
 
     public void resetLevel() {
         blocks.clear();
-        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
-        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
-        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
-        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
+//        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
+//        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
+//        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
+//        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
     }
 
     public void verander() {
