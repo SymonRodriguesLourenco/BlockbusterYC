@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
@@ -28,6 +30,12 @@ class Game extends View {
     Display display;
     Point point;
     int dWidth, dHeight;
+
+    //voor de pogingen
+    public boolean endGame = false;
+    public int pogingen = 3, levens = 3;
+    public ImageView poging1, poging2, poging3, leven1, leven2, leven3;
+    public Bitmap be, bf, he, hf;
 
 //  voor het updaten van het scherm in miliseconde:
     final long UPDATE_MILLIS = 1/3000;
@@ -53,7 +61,7 @@ class Game extends View {
     boolean touched, isFinished=false;
 
 
-    public Game(Context context) {
+    public Game(Context context, ImageView poging1,ImageView poging2,ImageView poging3,ImageView leven1,ImageView leven2,ImageView leven3) {
         super(context);
         handler = new Handler();
         runnable = new Runnable() {
@@ -68,6 +76,19 @@ class Game extends View {
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
+
+        this.poging1 = poging1;
+        this.poging2 = poging2;
+        this.poging3 = poging3;
+        this.leven1 = leven1;
+        this.leven2 = leven2;
+        this.leven3 = leven3;
+
+        be = BitmapFactory.decodeResource(getResources() ,R.drawable.ball_eaten);
+        bf = BitmapFactory.decodeResource(getResources(), R.drawable.ball_full);
+        he = BitmapFactory.decodeResource(getResources(), R.drawable.heart_empty);
+        hf = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon);
+
 
         ball.startPosition(dHeight);
 
@@ -94,6 +115,7 @@ class Game extends View {
         blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight));
         blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
         blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300));
+
     }
 
     @Override
@@ -105,7 +127,7 @@ class Game extends View {
         if(touched && !isFinished) {
             boolean uitkomst = ball.borderBounce(dWidth, dHeight);
             if (uitkomst) {
-                reset();
+                verander();
             }
         }
         for(int i = 0; i< blocks.size(); i++){
@@ -227,7 +249,44 @@ class Game extends View {
         ball.setSpeedX(0);
         ball.setSpeedY(0);
         ball.startPosition(dHeight);
-        touched= false;
+        touched = false;
         ball.setFired(false);
+        pogingen --;
+    }
+
+    public void verander() {
+        switch (pogingen) {
+            case 3:
+                poging1.setImageResource(R.drawable.ball_eaten);
+                break;
+            case 2:
+                poging2.setImageResource(R.drawable.ball_eaten);
+                break;
+            case 1:
+                poging3.setImageResource(R.drawable.ball_eaten);
+                break;
+        }
+
+        reset();
+
+        if (pogingen == 0) {
+            poging1.setImageResource(R.drawable.ball_full);
+            poging2.setImageResource(R.drawable.ball_full);
+            poging3.setImageResource(R.drawable.ball_full);
+            pogingen = 3;
+            levens--;
+        }
+
+        if (levens == 2) {
+            leven1.setImageResource(R.drawable.hearticon_empty);
+        } else if (levens == 1) {
+            leven2.setImageResource(R.drawable.hearticon_empty);
+        } else if (levens == 0) {
+            leven3.setImageResource(R.drawable.hearticon_empty  );
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            getContext().startActivity(intent);
+            Activity activity = (Activity)getContext();
+            activity.finish();
+        }
     }
 }
