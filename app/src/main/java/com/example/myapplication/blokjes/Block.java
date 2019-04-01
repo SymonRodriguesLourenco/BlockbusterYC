@@ -14,7 +14,6 @@ public abstract class Block extends Activity{
     int minX, minY, maxX, maxY;
     int hitsLeft;
     boolean fromUp, fromLeft, fromDown, fromRight;
-    String powerup = "";
 
     public Block(int X, int Y, int width, int height, int hitsLeft) {
         this.width = width;
@@ -84,9 +83,6 @@ public abstract class Block extends Activity{
         }
     }
 
-    public String getPowerup (){
-        return powerup;
-    }
 
     public boolean hit(int balX, int balY, int width, int height){
         if (minX < balX+width && balX < maxX && minY > balY && balY+height > maxY) {

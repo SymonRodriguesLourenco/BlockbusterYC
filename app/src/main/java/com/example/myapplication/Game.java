@@ -71,22 +71,22 @@ class Game extends View {
         };
         display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
         point = new Point();
-        ball = new Ball(100, 100, "powerball");
-        extraball = new Ball(100, 100, "powerball");
+        ball = new Ball(100, 100, "");
+//        extraball = new Ball(100, 100, "");
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
 
         ball.startPosition(dHeight);
-        extraball.startPosition(dHeight);
+//        extraball.startPosition(dHeight);
 
         bHeight = dHeight/100*18;
         bWidth = dWidth/20;
 
         ballMap = defineBitmap(R.drawable.ball_full, ball.getWidth(),ball.getHeight());
-        ballMap1 = defineBitmap(R.drawable.ball_full, extraball.getWidth(),extraball.getHeight());
+//        ballMap1 = defineBitmap(R.drawable.ball_full, extraball.getWidth(),extraball.getHeight());
         ballList.add(ball);
-        ballList.add(extraball);
+//        ballList.add(extraball);
 
         maxCursor = defineBitmap(R.drawable.ball, 50, 50);
         maxCursorX = -1000;
@@ -104,9 +104,9 @@ class Game extends View {
         finish = defineBitmap(R.drawable.block2, 300, 300);
 
         blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
-        blocks.add(new Powerupblock(dWidth/2, dHeight/100*50, bWidth, bHeight, 1, "powerball"));
-        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
-        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300));
+        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight));
+        blocks.add(new Powerupblock(dWidth/2, dHeight/100*75, bWidth, bHeight, "powerball"));
+        blocks.add(new Finish(dWidth-50, dHeight/2, 100, 10));
     }
 
     @Override
@@ -171,24 +171,27 @@ class Game extends View {
                                 }
                             }
                         }
-                        blocks.get(i).remove();
-                        switch (blocks.get(i).getPowerup()) {
-                            case "extratry":
-                                amounttry++;
-                            case "extralife":
-                                life++;
-                            case "multiball":
-                                ballList.add(extraball);
-                            case "powerball":
-                                ballList.get(a).setBallPowerball("powerball");
+                        if (blocks.get(i) instanceof Powerupblock) {
+                            Powerupblock block = (Powerupblock) blocks.get(i);
+                            switch (block.getPowerup()) {
+                                case "extratry":
+                                    amounttry++;
+                                case "extralife":
+                                    life++;
+                                case "multiball":
+                                    ballList.add(extraball);
+                                case "powerball":
+                                    ballList.get(a).setBallPowerball("powerball");
+                            }
                         }
+                        blocks.get(i).remove();
                     }
                     canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(), null);
                 }
             }
         }
         canvas.drawBitmap(ballMap, ball.getBallX(), ball.getBallY(), null);
-        canvas.drawBitmap(ballMap1, extraball.getBallX(), extraball.getBallY(), null);
+//        canvas.drawBitmap(ballMap1, extraball.getBallX(), extraball.getBallY(), null);
         canvas.drawBitmap(maxCursor, maxCursorX, maxCurosrY, null);
         canvas.drawBitmap(bigCursor, bigCursorX, bigCursorY, null);
         canvas.drawBitmap(medCursor, medCursorX, medCursorY, null);
