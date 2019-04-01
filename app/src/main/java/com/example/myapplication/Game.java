@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,6 +11,8 @@ import android.os.Handler;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
@@ -28,6 +31,13 @@ class Game extends View {
     Display display;
     Point point;
     int dWidth, dHeight;
+
+    //voor de pogingen
+    public boolean endGame = false;
+    public int pogingen = 3, levens = 3;
+    public ImageView poging1, leven1, leven2, leven3;
+    public TextView pogingTekst;
+    public Bitmap be, bf, he, hf;
 
 //  voor het updaten van het scherm in miliseconde:
     final long UPDATE_MILLIS = 1/3000;
@@ -53,7 +63,7 @@ class Game extends View {
     boolean touched, isFinished=false;
 
 
-    public Game(Context context) {
+    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3) {
         super(context);
         handler = new Handler();
         runnable = new Runnable() {
@@ -68,6 +78,18 @@ class Game extends View {
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
+
+        this.poging1 = poging1;
+        this.pogingTekst = pogingTekst;
+        this.leven1 = leven1;
+        this.leven2 = leven2;
+        this.leven3 = leven3;
+
+        be = BitmapFactory.decodeResource(getResources() ,R.drawable.ball_eaten);
+        bf = BitmapFactory.decodeResource(getResources(), R.drawable.ball_full);
+        he = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon_empty);
+        hf = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon);
+
 
         ball.startPosition(dHeight);
 
@@ -100,10 +122,11 @@ class Game extends View {
             blocks.get(i).bounce(ball.getSpeedX(), ball.getSpeedY(), ball.getBallX(), ball.getBallY(), ball.getWidth(), ball.getHeight(), ball.isGoingUp(), ball.isGoingForward());
         }
         super.onDraw(canvas);
+        pogingTekst.setText(pogingen+ "");
         if(touched && !isFinished) {
             boolean uitkomst = ball.borderBounce(dWidth, dHeight);
             if (uitkomst) {
-                reset();
+                verander();
             }
         }
         for(int i = 0; i< blocks.size(); i++){
@@ -216,6 +239,9 @@ class Game extends View {
                 minCursorX = -80;
             }
             ball.setFired(true);
+            pogingen--;
+            poging1.setImageResource(R.drawable.ball_eaten);
+
             touched = true;
         }
         return true;
@@ -225,7 +251,40 @@ class Game extends View {
         ball.setSpeedX(0);
         ball.setSpeedY(0);
         ball.startPosition(dHeight);
-        touched= false;
+        touched = false;
         ball.setFired(false);
+        poging1.setImageResource(R.drawable.ball_full);
     }
+
+    public void resetLevel() {
+        blocks.clear();
+        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
+        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
+        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
+        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
+    }
+
+    public void verander() {
+        reset();
+
+        if (pogingen == 0) {
+            poging1.setImageResource(R.drawable.ball_full);
+            pogingen = 3;
+            levens--;
+            resetLevel();
+        }
+
+        if (levens == 2) {
+            leven1.setImageResource(R.drawable.hearticon_empty);
+        } else if (levens == 1) {
+            leven2.setImageResource(R.drawable.hearticon_empty);
+        } else if (levens == 0) {
+            leven3.setImageResource(R.drawable.hearticon_empty  );
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            getContext().startActivity(intent);
+            Activity activity = (Activity)getContext();
+            activity.finish();
+        }
+    }
+
 }
