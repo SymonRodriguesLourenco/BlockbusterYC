@@ -14,7 +14,7 @@ public abstract class Block extends Activity{
     int minX, minY, maxX, maxY;
     int hitsLeft;
     boolean fromUp, fromLeft, fromDown, fromRight;
-    Bitmap blockStandard;
+    Bitmap img;
 
     public Block(int X, int Y, int width, int height, int hitsLeft) {
         this.width = width;
@@ -24,6 +24,9 @@ public abstract class Block extends Activity{
         this.maxX = minX + width;
         this.maxY = Y - height/2;
         this.minY = maxY + height;
+    }
+    public void draw(Canvas canvas){
+        canvas.drawBitmap(this.img, this.minX, this.maxY, null);
     }
 
     public int getMinX() {

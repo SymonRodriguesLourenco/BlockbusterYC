@@ -87,13 +87,11 @@ class Game extends View {
         minCursor = defineBitmap(R.drawable.ball, 20, 20);
         minCursorX = -1000;
 
-        blockStandard = defineBitmap(R.drawable.block, bWidth, bHeight);
-        finish = defineBitmap(R.drawable.block2, 300, 300);
 
-        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight));
-        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight));
-        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight));
-        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300));
+        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
+        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
+        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
+        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
     }
 
     @Override
@@ -114,7 +112,7 @@ class Game extends View {
                 if(hitBlock){
                     isFinished = true;
                 }
-                canvas.drawBitmap(finish, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
+                blocks.get(i).draw(canvas);
             }else{
                 hitBlock = blocks.get(i).hit(ball.getBallX(), ball.getBallY(), ball.getWidth(), ball.getHeight());
                 if(hitBlock) {
@@ -160,7 +158,7 @@ class Game extends View {
                     }
                     blocks.get(i).remove();
                 }
-                canvas.drawBitmap(blockStandard, blocks.get(i).getMinX(), blocks.get(i).getMaxY(),null);
+                blocks.get(i).draw(canvas);
             }
         }
         canvas.drawBitmap(ballMap, ball.getBallX(), ball.getBallY(), null);

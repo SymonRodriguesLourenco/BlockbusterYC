@@ -1,9 +1,18 @@
 package com.example.myapplication.blokjes;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.RelativeLayout;
+
+import com.example.myapplication.R;
+
 public class Finish extends Block {
 
-    public Finish(int X, int Y, int width, int height) {
+    public Finish(int X, int Y, int width, int height, Resources resources) {
         super(X, Y, width, height, -1);
+        this.img = BitmapFactory.decodeResource(resources, R.drawable.block2);
+        this.img = Bitmap.createScaledBitmap(this.img, this.height, this.height, false);
     }
 
 

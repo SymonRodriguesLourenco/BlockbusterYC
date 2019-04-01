@@ -31,7 +31,7 @@ public class StartGame extends AppCompatActivity {
         leven3 =(ImageView) findViewById(R.id.leven3);
         be = BitmapFactory.decodeResource(getResources() ,R.drawable.ball_eaten);
         bf = BitmapFactory.decodeResource(getResources(), R.drawable.ball_full);
-        he = BitmapFactory.decodeResource(getResources(), R.drawable.heart_empty);
+        he = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon_empty);
     }
 
     public static void verander() {
