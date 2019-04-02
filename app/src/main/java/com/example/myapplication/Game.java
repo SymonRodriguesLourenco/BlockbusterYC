@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,6 +40,8 @@ class Game extends View {
     public ImageView poging1, leven1, leven2, leven3;
     public TextView pogingTekst;
     public Bitmap be, bf, he, hf;
+    int level = 0;
+    Level levels;
 
 //  voor het updaten van het scherm in miliseconde:
     final long UPDATE_MILLIS = 1/3000;
@@ -82,8 +85,6 @@ class Game extends View {
         };
         display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
         point = new Point();
-        ball = new Ball(100, 100, "none");
-        extraball = new Ball(100, 100, "none");
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
@@ -99,12 +100,23 @@ class Game extends View {
         he = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon_empty);
         hf = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon);
 
-
-        ball.startPosition(dHeight);
-        extraball.setPos(-1000, -1000);
-
         bHeight = dHeight/100*18;
         bWidth = dWidth/20;
+
+
+        //        ====================================================================
+        ball = new Ball(100, 100, "");
+        extraball = new Ball(100, 100, "");
+        ball.startPosition(dHeight);
+        extraball.setPos(-1000, -1000);
+//
+//        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
+//        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
+//        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
+//        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
+        levels = new Level(dWidth,dHeight, ball.getWidth(), ball.getWidth(), getResources());
+//        =====================================================================
+
 
         ballMap = defineBitmap(R.drawable.ball_full, ball.getWidth(),ball.getHeight());
         ballMap1 = defineBitmap(R.drawable.ball_full, extraball.getWidth(),extraball.getHeight());
@@ -122,101 +134,105 @@ class Game extends View {
         minCursorX = -1000;
 
         pogingTekst.setText(pogingen+ " X");
-        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
-        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
-        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
-        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
-        blocks.add(new Powerupblock(dWidth/2-100, dHeight/2, bWidth, bHeight, "multiball", getResources()));
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        for(int a = 0; a < ballList.size(); a++) {
-            for (int i = 0; i < blocks.size(); i++) {
-                blocks.get(i).bounce(ballList.get(a).getSpeedX(), ballList.get(a).getSpeedY(), ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), ballList.get(a).isGoingUp(), ballList.get(a).isGoingForward());
-            }
-            super.onDraw(canvas);
-            if(touched && !isFinished) {
-                boolean uitkomst = ballList.get(a).borderBounce(dWidth, dHeight);
-                if (uitkomst) {
-                    ballList.get(a).setUitscherm(true);
-                    if (ball.isUitscherm() && extraball.isUitscherm()){
-                        verander();
+        if(isFinished){
+            level+=1;
+            pogingen = 3;
+            pogingTekst.setText(pogingen+ " X");
+            isFinished = false;
+        }
+        if(levels.size() > level) {
+            blocks = levels.get(level);
+            for (int a = 0; a < ballList.size(); a++) {
+                for (int i = 0; i < blocks.size(); i++) {
+                    blocks.get(i).bounce(ballList.get(a).getSpeedX(), ballList.get(a).getSpeedY(), ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), ballList.get(a).isGoingUp(), ballList.get(a).isGoingForward());
+                }
+                super.onDraw(canvas);
+                if(touched && !isFinished) {
+                    boolean uitkomst = ballList.get(a).borderBounce(dWidth, dHeight);
+                    if (uitkomst) {
+                        ballList.get(a).setUitscherm(true);
+                        if (ball.isUitscherm() && extraball.isUitscherm()){
+                            verander();
+                        }
                     }
                 }
-            }
-            for (int i = 0; i < blocks.size(); i++) {
-                if (blocks.get(i) instanceof Finish) {
-                    hitBlock = ((Finish) blocks.get(i)).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), 50);
-                    if (hitBlock) {
-                        isFinished = true;
+                for (int i = 0; i < blocks.size(); i++) {
+                    if (blocks.get(i) instanceof Finish) {
+                        hitBlock = ((Finish) blocks.get(i)).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), 50);
+                        if (hitBlock) {
+                            isFinished = true;
+                            reset();
+                        }
+                        blocks.get(i).draw(canvas);
+                    } else {
+                        hitBlock = blocks.get(i).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight());
+                        if (hitBlock) {
+                            int hits = blocks.get(i).getHitsLeft();
+                            hits--;
+                            blocks.get(i).setHitsLeft(hits);
+                            if (ballList.get(a).getBallPowerup() == "powerball") {
+                                blocks.get(i).setHitsLeft(0);
+                            } else {
+                                if (blocks.get(i).isFromLeft()) {
+                                    if (ballList.get(a).isGoingForward()) {
+                                        ballList.get(a).setGoingForward(false);
+                                        blocks.get(i).setFromLeft(false);
+                                    } else {
+                                        ballList.get(a).setGoingForward(true);
+                                        blocks.get(i).setFromLeft(false);
+                                    }
+                                } else if (blocks.get(i).isFromRight()) {
+                                    if (ballList.get(a).isGoingForward()) {
+                                        ballList.get(a).setGoingForward(false);
+                                        blocks.get(i).setFromRight(false);
+                                    } else {
+                                        ballList.get(a).setGoingForward(true);
+                                        blocks.get(i).setFromRight(false);
+                                    }
+                                }
+                                if (blocks.get(i).isFromUp()) {
+                                    if (ballList.get(a).isGoingUp()) {
+                                        ballList.get(a).setGoingUp(false);
+                                        blocks.get(i).setFromUp(false);
+                                    } else {
+                                        ballList.get(a).setGoingUp(true);
+                                        blocks.get(i).setFromUp(false);
+                                    }
+                                } else if (blocks.get(i).isFromDown()) {
+                                    if (ballList.get(a).isGoingUp()) {
+                                        ballList.get(a).setGoingUp(false);
+                                        blocks.get(i).setFromDown(false);
+                                    } else {
+                                        ballList.get(a).setGoingUp(true);
+                                        blocks.get(i).setFromDown(false);
+                                    }
+                                }
+                            }
+                            if (blocks.get(i) instanceof Powerupblock) {
+                                Powerupblock block = (Powerupblock) blocks.get(i);
+                                switch (block.getPowerup()) {
+                                    case "extratry":
+                                        amounttry++;
+                                        break;
+                                    case "extralife":
+                                        life++;
+                                        break;
+                                    case "multiball":
+                                        ball.setBallPowerup("multiball");
+                                        break;
+                                    case "powerball":
+                                        ball.setBallPowerup("powerball");
+                                        break;
+                                }
+                            }
+                            blocks.get(i).remove();
+                        }
+                        blocks.get(i).draw(canvas);
                     }
-                    blocks.get(i).draw(canvas);
-                } else {
-                    hitBlock = blocks.get(i).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight());
-                    if (hitBlock) {
-                        int hits = blocks.get(i).getHitsLeft();
-                        hits--;
-                        blocks.get(i).setHitsLeft(hits);
-                        if (ballList.get(a).getBallPowerup()=="powerball"){
-                            blocks.get(i).setHitsLeft(0);
-                        }
-                        else {
-                            if (blocks.get(i).isFromLeft()) {
-                                if (ballList.get(a).isGoingForward()) {
-                                    ballList.get(a).setGoingForward(false);
-                                    blocks.get(i).setFromLeft(false);
-                                } else {
-                                    ballList.get(a).setGoingForward(true);
-                                    blocks.get(i).setFromLeft(false);
-                                }
-                            } else if (blocks.get(i).isFromRight()) {
-                                if (ballList.get(a).isGoingForward()) {
-                                    ballList.get(a).setGoingForward(false);
-                                    blocks.get(i).setFromRight(false);
-                                } else {
-                                    ballList.get(a).setGoingForward(true);
-                                    blocks.get(i).setFromRight(false);
-                                }
-                            }
-                            if (blocks.get(i).isFromUp()) {
-                                if (ballList.get(a).isGoingUp()) {
-                                    ballList.get(a).setGoingUp(false);
-                                    blocks.get(i).setFromUp(false);
-                                } else {
-                                    ballList.get(a).setGoingUp(true);
-                                    blocks.get(i).setFromUp(false);
-                                }
-                            } else if (blocks.get(i).isFromDown()) {
-                                if (ballList.get(a).isGoingUp()) {
-                                    ballList.get(a).setGoingUp(false);
-                                    blocks.get(i).setFromDown(false);
-                                } else {
-                                    ballList.get(a).setGoingUp(true);
-                                    blocks.get(i).setFromDown(false);
-                                }
-                            }
-                        }
-                        if (blocks.get(i) instanceof Powerupblock) {
-                            Powerupblock block = (Powerupblock) blocks.get(i);
-                            switch (block.getPowerup()) {
-                                case "extratry":
-                                    amounttry++;
-                                    break;
-                                case "extralife":
-                                    life++;
-                                    break;
-                                case "multiball":
-                                    ball.setBallPowerup("multiball");
-                                    break;
-                                case "powerball":
-                                    ball.setBallPowerup("powerball");
-                                    break;
-                            }
-                        }
-                        blocks.get(i).remove();
-                    }
-                    blocks.get(i).draw(canvas);
                 }
             }
         }
@@ -290,11 +306,11 @@ class Game extends View {
                     bigCursorX = -80;
                     medCursorX = -80;
                     minCursorX = -80;
-                }
-                ballList.get(a).setFired(true);
-                if (a == 0){
-                    pogingen--;
-                    pogingTekst.setText(pogingen + " X");
+                    if (a == 0){
+                        pogingen--;
+                        pogingTekst.setText(pogingen + " X");
+                    }
+                    ballList.get(a).setFired(true);
                 }
                 poging1.setImageResource(R.drawable.ball_eaten);
                 touched = true;
@@ -317,11 +333,7 @@ class Game extends View {
     }
 
     public void resetLevel() {
-        blocks.clear();
-        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
-        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
-        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
-        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
+        levels = new Level(dWidth,dHeight, ball.getWidth(), ball.getWidth(), getResources());
     }
 
     public void verander() {
@@ -331,7 +343,6 @@ class Game extends View {
             poging1.setImageResource(R.drawable.ball_full);
             pogingen = 3;
             levens--;
-            pogingTekst.setText(pogingen+ " X");
             resetLevel();
         }
 
