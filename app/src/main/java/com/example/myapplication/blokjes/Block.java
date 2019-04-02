@@ -87,7 +87,6 @@ public abstract class Block extends Activity{
         }
     }
 
-
     public boolean hit(int balX, int balY, int width, int height){
         if (minX < balX+width && balX < maxX && minY > balY && balY+height > maxY) {
             return true;

@@ -68,12 +68,6 @@ class Game extends View {
 //  of het spel gestart is en de bal weggeschoten is
     boolean touched, isFinished=false;
 
-//  pogingen
-    int amounttry=1;
-
-//  levens
-    int life=2;
-
     public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3) {
         super(context);
         handler = new Handler();
@@ -215,11 +209,24 @@ class Game extends View {
                             if (blocks.get(i) instanceof Powerupblock) {
                                 Powerupblock block = (Powerupblock) blocks.get(i);
                                 switch (block.getPowerup()) {
-                                    case "extratry":
-                                        amounttry++;
+                                    case "pogingen":
+                                        pogingen++;
+                                        pogingTekst.setText(pogingen+ " X");
                                         break;
-                                    case "extralife":
-                                        life++;
+                                    case "levens":
+                                        if (levens <= 3){
+                                            if (levens == 2) {
+                                                leven1.setImageResource(R.drawable.hearticon);
+                                            } else if (levens == 1) {
+                                                leven2.setImageResource(R.drawable.hearticon);
+                                            } else if (levens == 0) {
+                                                leven3.setImageResource(R.drawable.hearticon);
+                                                Intent intent = new Intent(getContext(), MainActivity.class);
+                                                getContext().startActivity(intent);
+                                                Activity activity = (Activity)getContext();
+                                                activity.finish();
+                                            }}
+                                        levens++;
                                         break;
                                     case "multiball":
                                         ball.setBallPowerup("multiball");
