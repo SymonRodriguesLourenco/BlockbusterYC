@@ -331,6 +331,7 @@ class Game extends View {
             poging1.setImageResource(R.drawable.ball_full);
             pogingen = 3;
             levens--;
+            pogingTekst.setText(pogingen+ " X");
             resetLevel();
         }
 
