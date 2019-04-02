@@ -23,8 +23,8 @@ public class Level extends ArrayList<ArrayList<Block>>{
         this.bWidth = bWidth;
         this.bHeight = bHeight;
         this.resources = resources;
-        Level1();
-        Level2();
+//        Level1();
+//        Level2();
         Level3();
         Level4();
     }
@@ -44,18 +44,18 @@ public class Level extends ArrayList<ArrayList<Block>>{
     }
     private void Level3() {
         ArrayList<Block> tijdelijk3 = new ArrayList<>();
-        tijdelijk3.add(new Hard(dWidth/2, dHeight/100*25, 300, 300, resources));
-        tijdelijk3.add(new Hard(dWidth/2, dHeight/100*50, 300, 300, resources));
-        tijdelijk3.add(new Hard(dWidth/2, dHeight/100*75, 300, 300, resources));
+        tijdelijk3.add(new Hard(dWidth/2, dHeight/100*25, dHeight/100*20, dHeight/100*20, resources));
+        tijdelijk3.add(new Hard(dWidth/2, dHeight/100*50, dHeight/100*20, dHeight/100*20, resources));
+        tijdelijk3.add(new Hard(dWidth/2, dHeight/100*75, dHeight/100*20, dHeight/100*20, resources));
         tijdelijk3.add(new Finish(dWidth-150, dHeight/2, 300, 300, resources));
         this.add(tijdelijk3);
     }
 
     private void Level4() {
         ArrayList<Block> tijdelijk4 = new ArrayList<>();
-        tijdelijk4.add(new Hard(dWidth/2, 150, 300, 300, resources));
-        tijdelijk4.add(new Hard(dWidth/2, dHeight/2, 300, 300, resources));
-        tijdelijk4.add(new Hard(dWidth/2, dHeight-150, 300, 300, resources));
+        tijdelijk4.add(new Hard(dWidth/2, dHeight/100*10, dHeight/100*20, dHeight/100*20, resources));
+        tijdelijk4.add(new Hard(dWidth/2, dHeight/2, dHeight/100*20, dHeight/100*20, resources));
+        tijdelijk4.add(new Hard(dWidth/2, dHeight-dHeight/100*10, dHeight/100*20, dHeight/100*20, resources));
         tijdelijk4.add(new Finish(dWidth-150, dHeight/2, 300, 300, resources));
         this.add(tijdelijk4);
     }
