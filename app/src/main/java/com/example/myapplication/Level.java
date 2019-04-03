@@ -28,7 +28,6 @@ public class Level extends ArrayList<ArrayList<Block>>{
         Level4();
     }
 
-
     private void Level1() {
         ArrayList<Block> tijdelijk = new ArrayList<>();
         int blockdim = dHeight/100*20;

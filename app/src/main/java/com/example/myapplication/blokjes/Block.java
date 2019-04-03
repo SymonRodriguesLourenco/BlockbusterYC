@@ -30,14 +30,6 @@ public abstract class Block extends Activity{
         canvas.drawBitmap(this.img, this.minX, this.maxY, null);
     }
 
-    public int getMinX() {
-        return minX;
-    }
-
-    public int getMaxY() {
-        return maxY;
-    }
-
     public int getHitsLeft() {
         return hitsLeft;
     }
@@ -56,22 +48,6 @@ public abstract class Block extends Activity{
 
     public boolean isFromRight() {
         return fromRight;
-    }
-
-    public void setFromUp(boolean fromUp) {
-        this.fromUp = fromUp;
-    }
-
-    public void setFromLeft(boolean fromLeft) {
-        this.fromLeft = fromLeft;
-    }
-
-    public void setFromDown(boolean fromDown) {
-        this.fromDown = fromDown;
-    }
-
-    public void setFromRight(boolean fromRight) {
-        this.fromRight = fromRight;
     }
 
     public void setHitsLeft(int hitsLeft) {
@@ -95,7 +71,6 @@ public abstract class Block extends Activity{
             return false;
         }
     }
-
     public void bounce(int speedX, int speedY, int ballX, int ballY, int width, int height, boolean goingUp, boolean goingRight){
         reset();
         int cballX, cballY;
@@ -107,14 +82,14 @@ public abstract class Block extends Activity{
             c2 = hit(ballX, cballY, width, height);
             c3 = hit(cballX, cballY, width, height);
             if (c1) {
-                fromLeft = true;
+                this.fromLeft = true;
             }
             if (c2) {
-                fromDown = true;
+                this.fromDown = true;
             }
             if (!c1 && !c2 && c3) {
-                fromLeft = true;
-                fromDown = true;
+                this.fromLeft = true;
+                this.fromDown = true;
             }
         }
         else if(!goingRight && goingUp){
@@ -124,14 +99,14 @@ public abstract class Block extends Activity{
             c2 = hit(ballX, cballY, width, height);
             c3 = hit(cballX, cballY, width, height);
             if (c1){
-                fromRight = true;
+                this.fromRight = true;
             }
             if (c2){
-                fromDown = true;
+                this.fromDown = true;
             }
             if (!c1 && !c2 && c3){
-                fromRight = true;
-                fromDown = true;
+                this.fromRight = true;
+                this.fromDown = true;
             }
         }
         else if(goingRight && !goingUp) {
@@ -141,14 +116,14 @@ public abstract class Block extends Activity{
             c2 = hit(ballX, cballY, width, height);
             c3 = hit(cballX, cballY, width, height);
             if (c1) {
-                fromLeft = true;
+                this.fromLeft = true;
             }
             if (c2) {
-                fromUp = true;
+                this.fromUp = true;
             }
             if (!c1 && !c2 && c3) {
-                fromLeft = true;
-                fromUp = true;
+                this.fromLeft = true;
+                this.fromUp = true;
             }
         }
         else if(!goingRight && !goingUp){
@@ -158,22 +133,22 @@ public abstract class Block extends Activity{
             c2 = hit(ballX, cballY, width, height);
             c3 = hit(cballX, cballY, width, height);
             if (c1){
-                fromRight = true;
+                this.fromRight = true;
             }
             if (c2){
-                fromUp = true;
+                this.fromUp = true;
             }
             if (!c1 && !c2 && c3){
-                fromRight = true;
-                fromUp = true;
+                this.fromRight = true;
+                this.fromUp = true;
             }
         }
     }
 
     public void reset(){
-        fromLeft = false;
-        fromRight = false;
-        fromUp = false;
-        fromDown = false;
+        this.fromLeft = false;
+        this.fromRight = false;
+        this.fromUp = false;
+        this.fromDown = false;
     }
 }

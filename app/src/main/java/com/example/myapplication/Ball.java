@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import com.example.myapplication.blokjes.Block;
+
 public class Ball {
 
     private int ballX, ballY;
@@ -9,6 +11,8 @@ public class Ball {
     private boolean goingForward, goingUp;
     private boolean fired, uitscherm;
     private String ballPowerup;
+    private boolean invertX, invertY;
+    private int countY, countX;
 
     public boolean isUitscherm() {
         return uitscherm;
@@ -161,6 +165,15 @@ public class Ball {
             this.ballY -= speedY;
         }
         return uitkomst;
+
+    }
+
+    public void setInvertX(boolean invertX) {
+        this.invertX = invertX;
+    }
+
+    public void setInvertY(boolean invertY) {
+        this.invertY = invertY;
     }
 
     public void setPos(int ballX, int ballY) {
@@ -168,4 +181,40 @@ public class Ball {
         this.ballY = ballY;
     }
 
+    public void countXadd(){
+        this.countX ++;
+    }
+
+    public void countYadd(){
+        this.countY ++;
+    }
+
+    public void invert(){
+        if (invertX){
+            if (countY > 1){
+                invertX = false;
+            } else {
+                if (goingForward) {
+                    goingForward = false;
+                } else {
+                    goingForward = true;
+                }
+                invertX = false;
+            }
+        }
+        if (invertY) {
+            if (countX > 1){
+                invertY = false;
+            } else {
+                if (goingUp) {
+                    goingUp = false;
+                } else {
+                    goingUp = true;
+                }
+                invertY = false;
+            }
+        }
+        countX = 0;
+        countY = 0;
+    }
 }

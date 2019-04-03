@@ -35,7 +35,6 @@ class Game extends View {
     int dWidth, dHeight;
 
     //voor de pogingen
-    public boolean endGame = false;
     public int pogingen = 3, levens = 3;
     public ImageView poging1, leven1, leven2, leven3;
     public TextView pogingTekst;
@@ -52,10 +51,10 @@ class Game extends View {
 //  waarde die per x aantal miliseconde toegevoegt wil worden
     int speedX = 0, speedY = 0;
     List<Ball> ballList = new ArrayList<>();
-    int uitscherm = 0;
+    boolean invertX, invertY;
+    int countX, countY;
 
 //  Blocks
-    Bitmap blockStandard,finish;
     List<Block> blocks = new ArrayList<>();
     int bHeight, bWidth;
     boolean hitBlock;
@@ -142,7 +141,7 @@ class Game extends View {
             blocks = levels.get(level);
             for (int a = 0; a < ballList.size(); a++) {
                 for (int i = 0; i < blocks.size(); i++) {
-                    blocks.get(i).bounce(ballList.get(a).getSpeedX(), ballList.get(a).getSpeedY(), ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), ballList.get(a).isGoingUp(), ballList.get(a).isGoingForward());
+                  blocks.get(i).bounce(ballList.get(a).getSpeedX(), ballList.get(a).getSpeedY(), ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), ballList.get(a).isGoingUp(), ballList.get(a).isGoingForward());
                 }
                 super.onDraw(canvas);
                 if(touched && !isFinished) {
@@ -172,38 +171,18 @@ class Game extends View {
                                 blocks.get(i).setHitsLeft(0);
                             } else {
                                 if (blocks.get(i).isFromLeft()) {
-                                    if (ballList.get(a).isGoingForward()) {
-                                        ballList.get(a).setGoingForward(false);
-                                        blocks.get(i).setFromLeft(false);
-                                    } else {
-                                        ballList.get(a).setGoingForward(true);
-                                        blocks.get(i).setFromLeft(false);
-                                    }
+                                    ballList.get(a).setInvertX(true);
+                                    ballList.get(a).countXadd();
                                 } else if (blocks.get(i).isFromRight()) {
-                                    if (ballList.get(a).isGoingForward()) {
-                                        ballList.get(a).setGoingForward(false);
-                                        blocks.get(i).setFromRight(false);
-                                    } else {
-                                        ballList.get(a).setGoingForward(true);
-                                        blocks.get(i).setFromRight(false);
+                                    ballList.get(a).setInvertX(true);
+                                    ballList.get(a).countXadd();
                                     }
-                                }
                                 if (blocks.get(i).isFromUp()) {
-                                    if (ballList.get(a).isGoingUp()) {
-                                        ballList.get(a).setGoingUp(false);
-                                        blocks.get(i).setFromUp(false);
-                                    } else {
-                                        ballList.get(a).setGoingUp(true);
-                                        blocks.get(i).setFromUp(false);
-                                    }
+                                    ballList.get(a).setInvertY(true);
+                                    ballList.get(a).countYadd();
                                 } else if (blocks.get(i).isFromDown()) {
-                                    if (ballList.get(a).isGoingUp()) {
-                                        ballList.get(a).setGoingUp(false);
-                                        blocks.get(i).setFromDown(false);
-                                    } else {
-                                        ballList.get(a).setGoingUp(true);
-                                        blocks.get(i).setFromDown(false);
-                                    }
+                                    ballList.get(a).setInvertY(true);
+                                    ballList.get(a).countYadd();
                                 }
                             }
                             if (blocks.get(i) instanceof Powerupblock) {
@@ -241,6 +220,7 @@ class Game extends View {
                         blocks.get(i).draw(canvas);
                     }
                 }
+                ballList.get(a).invert();
             }
         }
         canvas.drawBitmap(ballMap, ball.getBallX(), ball.getBallY(), null);
