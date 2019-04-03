@@ -35,6 +35,5 @@ public class Powerupblock extends Block{
         Random rand = new Random();
         String random = listpowerups.get(rand.nextInt(listpowerups.size()));
         return random;
-
     }
 }
