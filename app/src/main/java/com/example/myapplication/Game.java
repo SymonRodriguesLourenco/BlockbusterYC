@@ -98,16 +98,11 @@ class Game extends View {
         bWidth = dHeight/100*8;
 
 
-        //        ====================================================================
+//        ====================================================================
         ball = new Ball(bWidth, bHeight, "");
         extraball = new Ball(bWidth, bHeight, "");
         ball.startPosition(dHeight);
         extraball.setPos(-1000, -1000);
-//
-//        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
-//        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
-//        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
-//        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
         levels = new Level(dWidth,dHeight, getResources());
 //        =====================================================================
 
@@ -149,9 +144,6 @@ class Game extends View {
                     boolean uitkomst = ballList.get(a).borderBounce(dWidth, dHeight);
                     if (uitkomst) {
                         ballList.get(a).setUitscherm(true);
-                        if (ball.isUitscherm() && extraball.isUitscherm()){
-                            verander();
-                        }
                     }
                 }
                 for (int i = 0; i < blocks.size(); i++) {
@@ -228,6 +220,9 @@ class Game extends View {
                         blocks.get(i).draw(canvas);
                     }
                 }
+            }
+            if (ball.isUitscherm() && extraball.isUitscherm()){
+                verander();
             }
         }
         canvas.drawBitmap(ballMap, ball.getBallX(), ball.getBallY(), null);
