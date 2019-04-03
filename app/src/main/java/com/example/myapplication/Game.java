@@ -214,7 +214,7 @@ class Game extends View {
                                         pogingTekst.setText(pogingen+ " X");
                                         break;
                                     case "levens":
-                                        if (levens <= 3){
+                                        if (levens < 3){
                                             if (levens == 2) {
                                                 leven1.setImageResource(R.drawable.hearticon);
                                             } else if (levens == 1) {
@@ -244,11 +244,13 @@ class Game extends View {
             }
         }
         canvas.drawBitmap(ballMap, ball.getBallX(), ball.getBallY(), null);
-        canvas.drawBitmap(ballMap1, extraball.getBallX(), extraball.getBallY(), null);
         canvas.drawBitmap(maxCursor, maxCursorX, maxCurosrY, null);
         canvas.drawBitmap(bigCursor, bigCursorX, bigCursorY, null);
         canvas.drawBitmap(medCursor, medCursorX, medCursorY, null);
         canvas.drawBitmap(minCursor, minCursorX, minCursorY, null);
+        if (ballList.size() == 2) {
+            canvas.drawBitmap(ballMap1, extraball.getBallX(), extraball.getBallY(), null);
+        }
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
 
@@ -333,14 +335,17 @@ class Game extends View {
         touched = false;
         ball.setFired(false);
         poging1.setImageResource(R.drawable.ball_full);
-        if (ball.getBallPowerup().equals("multiball")){
-            ballList.add(extraball);
-            ball.setBallPowerup("none");
+        if (ball.getBallPowerup().equals("none")){
+            ballList.remove(extraball);
         }
         else if (ball.getBallPowerup().equals("powerballnotactive")){
             ball.setBallPowerup("powerball");
         }
         else if (ball.getBallPowerup().equals("powerball")){
+            ball.setBallPowerup("none");
+
+        }else if (ball.getBallPowerup().equals("multiball")){
+            ballList.add(extraball);
             ball.setBallPowerup("none");
         }
     }
