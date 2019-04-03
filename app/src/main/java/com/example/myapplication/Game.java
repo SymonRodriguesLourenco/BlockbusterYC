@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
@@ -38,10 +39,13 @@ class Game extends View {
     public boolean endGame = false;
     public int pogingen = 3, levens = 3;
     public ImageView poging1, leven1, leven2, leven3;
-    public TextView pogingTekst;
+    public TextView pogingTekst, scoreLabel;
     public Bitmap be, bf, he, hf;
     int level = 0;
     Level levels;
+
+    //voor de highscore
+    private int score = 0;
 
 //  voor het updaten van het scherm in miliseconde:
     final long UPDATE_MILLIS = 1/3000;
@@ -68,7 +72,7 @@ class Game extends View {
 //  of het spel gestart is en de bal weggeschoten is
     boolean touched, isFinished=false;
 
-    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3) {
+    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3, TextView scoreLabel) {
         super(context);
         handler = new Handler();
         runnable = new Runnable() {
@@ -88,6 +92,7 @@ class Game extends View {
         this.leven1 = leven1;
         this.leven2 = leven2;
         this.leven3 = leven3;
+        this.scoreLabel = scoreLabel;
 
         be = BitmapFactory.decodeResource(getResources() ,R.drawable.ball_eaten);
         bf = BitmapFactory.decodeResource(getResources(), R.drawable.ball_full);
@@ -128,12 +133,16 @@ class Game extends View {
         minCursorX = -1000;
 
         pogingTekst.setText(pogingen+ " X");
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         if(isFinished){
             level+=1;
+            score += 100 * level;
+            score += pogingen * 50;
+            scoreLabel.setText("Score : " + score);
             pogingen = 3;
             pogingTekst.setText(pogingen+ " X");
             isFinished = false;
@@ -236,7 +245,10 @@ class Game extends View {
                                         break;
                                 }
                             }
-                            blocks.get(i).remove();
+                            if(blocks.get(i).remove()) {
+                                score -= 25;
+                                scoreLabel.setText("Score : " + score   );
+                            }
                         }
                         blocks.get(i).draw(canvas);
                     }
@@ -346,9 +358,11 @@ class Game extends View {
     public void verander() {
         reset();
 
+
         if (pogingen == 0) {
             poging1.setImageResource(R.drawable.ball_full);
             pogingen = 3;
+            pogingTekst.setText(pogingen + " X");
             levens--;
             resetLevel();
         }
@@ -358,8 +372,11 @@ class Game extends View {
         } else if (levens == 1) {
             leven2.setImageResource(R.drawable.hearticon_empty);
         } else if (levens == 0) {
-            leven3.setImageResource(R.drawable.hearticon_empty  );
-            Intent intent = new Intent(getContext(), MainActivity.class);
+            leven3.setImageResource(R.drawable.hearticon_empty);
+            Intent intent = new Intent(getContext(), GameOver.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("score", score + "");
+            intent.putExtras(bundle);
             getContext().startActivity(intent);
             Activity activity = (Activity)getContext();
             activity.finish();

@@ -78,12 +78,16 @@ public abstract class Block extends Activity{
         this.hitsLeft = hitsLeft;
     }
 
-    public void remove() {
+    public boolean remove() {
         if(this.hitsLeft == 0){
             this.minX = -300;
             this.maxX = -200;
             this.minY = -200;
             this.maxY = -100;
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
