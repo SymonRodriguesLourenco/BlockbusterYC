@@ -176,4 +176,13 @@ public abstract class Block extends Activity{
         fromUp = false;
         fromDown = false;
     }
+    public boolean hit(String powerup){
+        if (powerup.equals("powerball")){
+            this.hitsLeft = 0;
+            return true;
+        } else {
+            hitsLeft --;
+            return false;
+        }
+    }
 }

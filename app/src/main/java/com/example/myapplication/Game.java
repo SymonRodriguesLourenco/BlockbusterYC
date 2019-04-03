@@ -165,12 +165,8 @@ class Game extends View {
                     } else {
                         hitBlock = blocks.get(i).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight());
                         if (hitBlock) {
-                            int hits = blocks.get(i).getHitsLeft();
-                            hits--;
-                            blocks.get(i).setHitsLeft(hits);
-                            if (ballList.get(a).getBallPowerup() == "powerball") {
-                                blocks.get(i).setHitsLeft(0);
-                            } else {
+                            boolean power = blocks.get(i).hit(ballList.get(a).getBallPowerup());
+                            if (!power) {
                                 if (blocks.get(i).isFromLeft()) {
                                     if (ballList.get(a).isGoingForward()) {
                                         ballList.get(a).setGoingForward(false);
@@ -214,20 +210,11 @@ class Game extends View {
                                         pogingTekst.setText(pogingen+ " X");
                                         break;
                                     case "levens":
-                                        if (levens <= 3){
-                                            if (levens == 2) {
-                                                leven1.setImageResource(R.drawable.hearticon);
-                                            } else if (levens == 1) {
-                                                leven2.setImageResource(R.drawable.hearticon);
-                                            } else if (levens == 0) {
-                                                leven3.setImageResource(R.drawable.hearticon);
-                                                Intent intent = new Intent(getContext(), MainActivity.class);
-                                                getContext().startActivity(intent);
-                                                Activity activity = (Activity)getContext();
-                                                activity.finish();
-                                            }}
-                                        levens++;
-                                        break;
+                                        if (levens < 3) {
+                                            levens++;
+                                            displayLevens();
+                                            break;
+                                        }
                                     case "multiball":
                                         ball.setBallPowerup("multiball");
                                         break;
@@ -358,17 +345,32 @@ class Game extends View {
             levens--;
             resetLevel();
         }
-
-        if (levens == 2) {
-            leven1.setImageResource(R.drawable.hearticon_empty);
-        } else if (levens == 1) {
-            leven2.setImageResource(R.drawable.hearticon_empty);
-        } else if (levens == 0) {
-            leven3.setImageResource(R.drawable.hearticon_empty  );
+        displayLevens();
+        if (levens == 0) {
             Intent intent = new Intent(getContext(), MainActivity.class);
             getContext().startActivity(intent);
             Activity activity = (Activity)getContext();
             activity.finish();
+        }
+    }
+
+    public void displayLevens() {
+        if (levens == 3) {
+            leven1.setImageResource(R.drawable.hearticon);
+            leven2.setImageResource(R.drawable.hearticon);
+            leven3.setImageResource(R.drawable.hearticon);
+        } else if (levens == 2) {
+            leven1.setImageResource(R.drawable.hearticon_empty);
+            leven2.setImageResource(R.drawable.hearticon);
+            leven3.setImageResource(R.drawable.hearticon);
+        } else if (levens == 1) {
+            leven1.setImageResource(R.drawable.hearticon_empty);
+            leven2.setImageResource(R.drawable.hearticon_empty);
+            leven3.setImageResource(R.drawable.hearticon);
+        } else if (levens == 0) {
+            leven1.setImageResource(R.drawable.hearticon_empty);
+            leven2.setImageResource(R.drawable.hearticon_empty);
+            leven3.setImageResource(R.drawable.hearticon_empty);
         }
     }
 
