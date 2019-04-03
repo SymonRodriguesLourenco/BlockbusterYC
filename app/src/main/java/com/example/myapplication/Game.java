@@ -94,13 +94,13 @@ class Game extends View {
         he = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon_empty);
         hf = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon);
 
-        bHeight = dHeight/100*18;
-        bWidth = dWidth/20;
+        bHeight = dHeight/100*8;
+        bWidth = dHeight/100*8;
 
 
         //        ====================================================================
-        ball = new Ball(100, 100, "");
-        extraball = new Ball(100, 100, "");
+        ball = new Ball(bWidth, bHeight, "");
+        extraball = new Ball(bWidth, bHeight, "");
         ball.startPosition(dHeight);
         extraball.setPos(-1000, -1000);
 //
@@ -108,7 +108,7 @@ class Game extends View {
 //        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
 //        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
 //        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
-        levels = new Level(dWidth,dHeight, ball.getWidth(), ball.getWidth(), getResources());
+        levels = new Level(dWidth,dHeight, getResources());
 //        =====================================================================
 
 
@@ -156,7 +156,7 @@ class Game extends View {
                 }
                 for (int i = 0; i < blocks.size(); i++) {
                     if (blocks.get(i) instanceof Finish) {
-                        hitBlock = ((Finish) blocks.get(i)).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), 50);
+                        hitBlock = ((Finish) blocks.get(i)).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), 1);
                         if (hitBlock) {
                             isFinished = true;
                             reset();
@@ -354,7 +354,7 @@ class Game extends View {
     }
 
     public void resetLevel() {
-        levels = new Level(dWidth,dHeight, ball.getWidth(), ball.getWidth(), getResources());
+        levels = new Level(dWidth,dHeight, getResources());
     }
 
     public void verander() {
@@ -364,6 +364,7 @@ class Game extends View {
             poging1.setImageResource(R.drawable.ball_full);
             pogingen = 3;
             levens--;
+            pogingTekst.setText(pogingen + " X");
             resetLevel();
         }
 
