@@ -7,6 +7,7 @@ import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
 import com.example.myapplication.blokjes.Hard;
 import com.example.myapplication.blokjes.Medium;
+import com.example.myapplication.blokjes.Powerupblock;
 import com.example.myapplication.blokjes.Soft;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class Level extends ArrayList<ArrayList<Block>>{
         tijdelijk.add(new Finish(dWidth-blockdim/2, dHeight/2+blockdim/4, finishWidth, finishHeight, resources));
         tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, padding+blockdim/2, blockdim, blockdim, resources));
         tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, padding+blockdim/2+blockdim, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, dHeight-blockdim/2, blockdim, blockdim, resources));
+        tijdelijk.add(new Powerupblock(dWidth-blockdim - blockdim/2, dHeight-blockdim/2, blockdim, blockdim, "", resources));
         tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, dHeight-blockdim/2-blockdim, blockdim, blockdim, resources));
         tijdelijk.add(new Hard(dWidth/2, dHeight/2, blockdim*2, blockdim*2, resources));
         this.add(tijdelijk);

@@ -211,7 +211,7 @@ class Game extends View {
                                         ball.setBallPowerup("multiball");
                                         break;
                                     case "powerball":
-                                        ball.setBallPowerup("powerball");
+                                        ball.setBallPowerup("powerballnotactive");
                                         break;
                                 }
                             }
@@ -315,6 +315,12 @@ class Game extends View {
         poging1.setImageResource(R.drawable.ball_full);
         if (ball.getBallPowerup().equals("multiball")){
             ballList.add(extraball);
+            ball.setBallPowerup("none");
+        }
+        else if (ball.getBallPowerup().equals("powerballnotactive")){
+            ball.setBallPowerup("powerball");
+        }
+        else if (ball.getBallPowerup().equals("powerball")){
             ball.setBallPowerup("none");
         }
     }
