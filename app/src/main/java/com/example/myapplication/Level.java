@@ -7,6 +7,7 @@ import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
 import com.example.myapplication.blokjes.Hard;
 import com.example.myapplication.blokjes.Medium;
+import com.example.myapplication.blokjes.Powerupblock;
 import com.example.myapplication.blokjes.Soft;
 
 import java.util.ArrayList;
