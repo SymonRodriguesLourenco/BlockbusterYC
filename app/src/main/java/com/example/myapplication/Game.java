@@ -216,10 +216,13 @@ class Game extends View {
                                     case "levens":
                                         if (levens < 3){
                                             if (levens == 2) {
+                                                levens++;
                                                 leven1.setImageResource(R.drawable.hearticon);
                                             } else if (levens == 1) {
+                                                levens++;
                                                 leven2.setImageResource(R.drawable.hearticon);
                                             } else if (levens == 0) {
+                                                levens++;
                                                 leven3.setImageResource(R.drawable.hearticon);
                                                 Intent intent = new Intent(getContext(), MainActivity.class);
                                                 getContext().startActivity(intent);
