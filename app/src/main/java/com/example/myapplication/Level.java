@@ -24,8 +24,8 @@ public class Level extends ArrayList<ArrayList<Block>>{
         this.bWidth = bWidth;
         this.bHeight = bHeight;
         this.resources = resources;
-//        Level1();
-//        Level2();
+        Level1();
+        Level2();
         Level3();
         Level4();
     }
