@@ -23,7 +23,7 @@ public class Powerupblock extends Block{
     }
 
     public String getPowerup() {
-//        powerup = randomizelistpowerup();
+        powerup = randomizelistpowerup();
         return powerup;
     }
 

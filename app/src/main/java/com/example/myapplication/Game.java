@@ -134,6 +134,7 @@ class Game extends View {
     protected void onDraw(Canvas canvas) {
         if(isFinished){
             level+=1;
+            ball.setBallPowerup("");
             score += 100 * level;
             score += pogingen * 50;
             scoreLabel.setText("Score : " + score);
@@ -359,7 +360,10 @@ class Game extends View {
         }
         displayLevens();
         if (levens == 0) {
-            Intent intent = new Intent(getContext(), MainActivity.class);
+            Intent intent = new Intent(getContext(), GameOver.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("score", score + "");
+            intent.putExtras(bundle);
             getContext().startActivity(intent);
             Activity activity = (Activity)getContext();
             activity.finish();

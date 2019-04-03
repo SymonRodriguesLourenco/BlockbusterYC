@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,9 +24,6 @@ public class GameOver extends AppCompatActivity {
         String value = bundle.getString("score");
 
         scoreLabel1.setText(value);
-
-//        int score = getIntent().getIntExtra("SCORE", 0);
-//        scoreLabel.setText(score + "");
 
         SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
         int highScore = settings.getInt("HIGH_SCORE", 0);
