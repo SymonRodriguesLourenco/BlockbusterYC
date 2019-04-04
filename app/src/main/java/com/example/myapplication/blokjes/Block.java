@@ -56,10 +56,10 @@ public abstract class Block extends Activity{
 
     public boolean remove() {
         if(this.hitsLeft == 0){
-            this.minX = -300;
-            this.maxX = -200;
-            this.minY = -200;
-            this.maxY = -100;
+            this.minX = -500;
+            this.maxX = -500;
+            this.minY = -500;
+            this.maxY = -500;
             return true;
         }
         else {
@@ -157,8 +157,14 @@ public abstract class Block extends Activity{
     }
     public boolean hit(String powerup){
         if (powerup.equals("powerball")){
-            this.hitsLeft = 0;
-            return true;
+            if (this.hitsLeft < 0){
+                setHitsLeft(1);
+                return false;
+            }
+            else {
+               setHitsLeft(0);
+               return true;
+            }
         } else {
             hitsLeft --;
             return false;

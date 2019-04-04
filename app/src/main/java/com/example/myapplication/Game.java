@@ -9,12 +9,12 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
@@ -25,7 +25,6 @@ import com.example.myapplication.blokjes.Soft;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 class Game extends View {
 //  voor het runnen van de applicatie:
@@ -189,19 +188,23 @@ class Game extends View {
                                 switch (block.getPowerup()) {
                                     case "pogingen":
                                         pogingen++;
-                                        pogingTekst.setText(pogingen+ " X");
+                                        pogingTekst.setText(pogingen + " X");
+                                        Toast.makeText(getContext(),"+1 poging",Toast.LENGTH_SHORT).show();
                                         break;
                                     case "levens":
                                         if (levens < 3) {
                                             levens++;
                                             displayLevens();
+                                            Toast.makeText(getContext(), "+1 leven", Toast.LENGTH_SHORT).show();
                                             break;
                                         }
                                     case "multiball":
                                         ball.setBallPowerup("multiball");
+                                        Toast.makeText(getContext(),"multiball",Toast.LENGTH_SHORT).show();
                                         break;
                                     case "powerball":
                                         ball.setBallPowerup("powerballnotactive");
+                                        Toast.makeText(getContext(),"powerball",Toast.LENGTH_SHORT).show();
                                         break;
                                 }
                             }
