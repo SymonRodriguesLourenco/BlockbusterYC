@@ -7,14 +7,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
@@ -34,6 +38,7 @@ class Game extends View {
     Display display;
     Point point;
     int dWidth, dHeight;
+    MediaPlayer player;
 
     //voor de pogingen
     public int pogingen = 3, levens = 3;
@@ -71,6 +76,7 @@ class Game extends View {
 //  of het spel gestart is en de bal weggeschoten is
     boolean touched, isFinished=false;
 
+
     public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3, TextView scoreLabel) {
         super(context);
         handler = new Handler();
@@ -85,7 +91,6 @@ class Game extends View {
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
-
         this.poging1 = poging1;
         this.pogingTekst = pogingTekst;
         this.leven1 = leven1;
@@ -169,6 +174,7 @@ class Game extends View {
                         if (hitBlock) {
                             boolean power = blocks.get(i).hit(ballList.get(a).getBallPowerup());
                             if (!power) {
+                                play();
                                 if (blocks.get(i).isFromLeft()) {
                                     ballList.get(a).setInvertX(true);
                                     ballList.get(a).countXadd();
@@ -372,4 +378,23 @@ class Game extends View {
         }
     }
 
+    public void play(){
+        if (player == null) {
+            player = MediaPlayer.create(getContext(), R.raw.clack);
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopPlayer();
+                }
+            });
+        }
+        player.start();
+    }
+
+    private void stopPlayer() {
+        if (player != null) {
+            player.release();
+            player = null;
+        }
+    }
 }
