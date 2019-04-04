@@ -18,7 +18,7 @@ public class Powerupblock extends Block{
     public Powerupblock(int X, int Y, int width, int height, String powerup, Resources resources) {
         super(X, Y, width, height,  1);
         this.powerup = powerup;
-        this.img = BitmapFactory.decodeResource(resources, R.drawable.tomaat);
+        this.img = BitmapFactory.decodeResource(resources, R.drawable.popcorn);
         this.img = Bitmap.createScaledBitmap(this.img, this.height, this.height, false);
     }
 
