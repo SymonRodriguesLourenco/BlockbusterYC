@@ -150,6 +150,9 @@ class Game extends View {
                 }
                 if(touched && !isFinished) {
                     boolean uitkomst = donut.borderBounce(dWidth, dHeight);
+                    if (ball.isSound()){
+                        this.play();
+                    }
                     if (uitkomst) {
                         donut.setUitscherm(true);
                     }
@@ -165,6 +168,7 @@ class Game extends View {
                         if (hitBlock) {
                             boolean power = block.hit(donut.getBallPowerup());
                             if (!power) {
+                                this.play();
                                 if (block.isFromLeft()) {
                                     donut.setInvertX(true);
                                     donut.countXadd();

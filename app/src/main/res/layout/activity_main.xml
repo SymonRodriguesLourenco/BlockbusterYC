@@ -12,9 +12,11 @@
         android:id="@+id/imageButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
+        android:background="@color/colorAccent"
         android:contentDescription="@string/app_name"
+        android:padding="5dp"
+        android:tint="@color/colorPrimary"
         app:srcCompat="@android:drawable/ic_media_play" />
 
     <TextView
@@ -25,6 +27,7 @@
         android:paddingTop="35dp"
         android:text="Blockbuster"
         android:textAlignment="center"
+        android:textColorLink="@color/colorAccent"
         android:textSize="36sp" />
 
 

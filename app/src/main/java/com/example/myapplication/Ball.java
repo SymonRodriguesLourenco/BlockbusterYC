@@ -12,6 +12,7 @@ public class Ball {
     private String ballPowerup;
     private boolean invertX, invertY;
     private int countY, countX;
+    private boolean sound;
 
     public boolean isUitscherm() {
         return uitscherm;
@@ -31,6 +32,7 @@ public class Ball {
         this.goingForward = true;
         this.ballPowerup = ballPowerup;
         this.uitscherm = true;
+        this.sound = false;
     }
 
     public int getBallX() {
@@ -112,6 +114,7 @@ public class Ball {
         int maxX = dWidth - width;
         int maxY = dHeight - height;
         boolean uitkomst = false;
+        this.sound = false;
 
 
 
@@ -128,6 +131,7 @@ public class Ball {
         if ((ballX + speedX) >= maxX) {
             if ((ballX + speedX) > maxX) {
                 ballX = maxX;
+                this.sound = true;
             }
             goingForward = false;
         }
@@ -136,6 +140,7 @@ public class Ball {
         if ((ballY - speedY) < minY) {
             if ((ballY - speedY) < minY) {
                 ballY = minY;
+                this.sound = true;
             }
             goingUp = false;
         }
@@ -143,6 +148,7 @@ public class Ball {
         if ((ballY + speedY) >= maxY) {
             if ((ballY + speedY) > maxY) {
                 ballY = maxY;
+                this.sound = true;
             }
             goingUp = true;
         }
@@ -160,6 +166,10 @@ public class Ball {
         }
         return uitkomst;
 
+    }
+
+    public boolean isSound() {
+        return sound;
     }
 
     public void setInvertX(boolean invertX) {
