@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,10 +17,7 @@ import android.widget.TextView;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
-import com.example.myapplication.blokjes.Hard;
-import com.example.myapplication.blokjes.Medium;
 import com.example.myapplication.blokjes.Powerupblock;
-import com.example.myapplication.blokjes.Soft;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,15 +32,11 @@ class Game extends View {
     int dWidth, dHeight;
 
     //voor de pogingen
-    public int pogingen = 3, levens = 3;
-    public ImageView poging1, leven1, leven2, leven3;
-    public TextView pogingTekst, scoreLabel;
-    public Bitmap be, bf, he, hf;
+    ImageView poging1, leven1, leven2, leven3;
+    TextView pogingTekst, scoreLabel;
+    Bitmap be, bf, he, hf;
     int level = 0;
     Level levels;
-
-    //voor de highscore
-    private int score = 0;
 
 //  voor het updaten van het scherm in miliseconde:
     final long UPDATE_MILLIS = 1/3000;
@@ -55,8 +47,8 @@ class Game extends View {
 //  waarde die per x aantal miliseconde toegevoegt wil worden
     int speedX = 0, speedY = 0;
     List<Ball> ballList = new ArrayList<>();
-    boolean invertX, invertY;
-    int countX, countY;
+
+    Cursor cursor;
 
 //  Blocks
     List<Block> blocks = new ArrayList<>();
@@ -66,7 +58,7 @@ class Game extends View {
 //  als de bal naar links gaat is going forward false anders true, als de bal naar boven gaat i goingup true,anders false
     Bitmap maxCursor, bigCursor, medCursor, minCursor;
 //  de coordinaten van de maxCursor
-    int maxCursorX, maxCurosrY, bigCursorX, bigCursorY, medCursorX, medCursorY, minCursorX, minCursorY;
+    int maxCursorX, maxCursorY, bigCursorX, bigCursorY, medCursorX, medCursorY, minCursorX, minCursorY;
 
 //  of het spel gestart is en de bal weggeschoten is
     boolean touched, isFinished=false;
@@ -101,99 +93,98 @@ class Game extends View {
         bHeight = dHeight/100*8;
         bWidth = dHeight/100*8;
 
-
-//        ====================================================================
         ball = new Ball(bWidth, bHeight, "");
         extraball = new Ball(bWidth, bHeight, "");
         ball.startPosition(dHeight);
         extraball.setPos(-1000, -1000);
-        levels = new Level(dWidth,dHeight, getResources());
-//        =====================================================================
 
+        this.cursor = new Cursor(50, bHeight);
+
+        levels = new Level(dWidth,dHeight, getResources());
 
         ballMap = defineBitmap(R.drawable.ball_full, ball.getWidth(),ball.getHeight());
         ballMap1 = defineBitmap(R.drawable.ball_full, extraball.getWidth(),extraball.getHeight());
         ballList.add(ball);
 
-        maxCursor = defineBitmap(R.drawable.ball, 50, 50);
+        maxCursor = defineBitmap(R.drawable.ball, cursor.getMaxCursorSize(), cursor.getMaxCursorSize());
         maxCursorX = -1000;
 
-        bigCursor = defineBitmap(R.drawable.ball, 40, 40);
+        bigCursor = defineBitmap(R.drawable.ball, cursor.getBigCursorSize(), cursor.getBigCursorSize());
         bigCursorX = -1000;
-        medCursor = defineBitmap(R.drawable.ball, 30, 30);
+        medCursor = defineBitmap(R.drawable.ball, cursor.getMedCursorSize(), cursor.getMedCursorSize());
         medCursorX = -1000;
 
-        minCursor = defineBitmap(R.drawable.ball, 20, 20);
+        minCursor = defineBitmap(R.drawable.ball, cursor.getMinCursorSize(), cursor.getMinCursorSize());
         minCursorX = -1000;
 
-        pogingTekst.setText(pogingen+ " X");
+        pogingTekst.setText(levels.getPogingen()+ " X");
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         if(isFinished){
             level+=1;
             ball.setBallPowerup("");
             ballList.remove(extraball);
             extraball.setUitscherm(true);
-            score += 100 * level;
-            score += pogingen * 50;
-            scoreLabel.setText("Score : " + score);
-            pogingen = 3;
-            pogingTekst.setText(pogingen+ " X");
+            levels.addScore((100*level + levels.getPogingen()*50));
+            scoreLabel.setText("Score : " + levels.getScore());
+            levels.resetPogingen();
+            pogingTekst.setText(levels.getPogingen()+ " X");
             isFinished = false;
         }
         if(levels.size() > level) {
             blocks = levels.get(level);
-            for (int a = 0; a < ballList.size(); a++) {
-                for (int i = 0; i < blocks.size(); i++) {
-                  blocks.get(i).bounce(ballList.get(a).getSpeedX(), ballList.get(a).getSpeedY(), ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), ballList.get(a).isGoingUp(), ballList.get(a).isGoingForward());
+            for (Block block : blocks){
+                block.draw(canvas);
+            }
+            for (Ball donut: ballList) {
+                for (Block block : blocks) {
+                  block.bounce(donut.getSpeedX(), donut.getSpeedY(), donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight(), donut.isGoingUp(), donut.isGoingForward());
                 }
-                super.onDraw(canvas);
                 if(touched && !isFinished) {
-                    boolean uitkomst = ballList.get(a).borderBounce(dWidth, dHeight);
+                    boolean uitkomst = donut.borderBounce(dWidth, dHeight);
                     if (uitkomst) {
-                        ballList.get(a).setUitscherm(true);
+                        donut.setUitscherm(true);
                     }
                 }
-                for (int i = 0; i < blocks.size(); i++) {
-                    if (blocks.get(i) instanceof Finish) {
-                        hitBlock = ((Finish) blocks.get(i)).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), 50);
+                for (Block block : blocks) {
+                    if (block instanceof Finish) {
+                        hitBlock = ((Finish) block).hit(donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight(), 50);
                         if (hitBlock) {
                             isFinished = true;
-                            reset();
                         }
-                        blocks.get(i).draw(canvas);
                     } else {
-                        hitBlock = blocks.get(i).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight());
+                        hitBlock = block.hit(donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight());
                         if (hitBlock) {
-                            boolean power = blocks.get(i).hit(ballList.get(a).getBallPowerup());
+                            boolean power = block.hit(donut.getBallPowerup());
                             if (!power) {
-                                if (blocks.get(i).isFromLeft()) {
-                                    ballList.get(a).setInvertX(true);
-                                    ballList.get(a).countXadd();
-                                } else if (blocks.get(i).isFromRight()) {
-                                    ballList.get(a).setInvertX(true);
-                                    ballList.get(a).countXadd();
+                                if (block.isFromLeft()) {
+                                    donut.setInvertX(true);
+                                    donut.countXadd();
+                                } else if (block.isFromRight()) {
+                                    donut.setInvertX(true);
+                                    donut.countXadd();
                                     }
-                                if (blocks.get(i).isFromUp()) {
-                                    ballList.get(a).setInvertY(true);
-                                    ballList.get(a).countYadd();
-                                } else if (blocks.get(i).isFromDown()) {
-                                    ballList.get(a).setInvertY(true);
-                                    ballList.get(a).countYadd();
+                                if (block.isFromUp()) {
+                                    donut.setInvertY(true);
+                                    donut.countYadd();
+                                } else if (block.isFromDown()) {
+                                    donut.setInvertY(true);
+                                    donut.countYadd();
                                 }
                             }
-                            if (blocks.get(i) instanceof Powerupblock) {
-                                Powerupblock block = (Powerupblock) blocks.get(i);
-                                switch (block.getPowerup()) {
+                            if (block instanceof Powerupblock) {
+                                Powerupblock blocky = (Powerupblock) block;
+                                switch (blocky.getPowerup()) {
                                     case "pogingen":
-                                        pogingen++;
-                                        pogingTekst.setText(pogingen+ " X");
+                                        levels.addPogingen();
+                                        pogingTekst.setText(levels.getPogingen()+ " X");
                                         break;
                                     case "levens":
-                                        if (levens < 3) {
-                                            levens++;
+                                        if (levels.getLevens() < 3) {
+                                            levels.addLevens();
                                             displayLevens();
                                             break;
                                         }
@@ -205,25 +196,26 @@ class Game extends View {
                                         break;
                                 }
                             }
-                            if(blocks.get(i).remove()) {
-                                score -= 25;
-                                scoreLabel.setText("Score : " + score   );
+                            if(block.remove()) {
+                                levels.subsScore(25);
+                                scoreLabel.setText("Score : " + levels.getScore()   );
                             }
                         }
-                        blocks.get(i).draw(canvas);
                     }
                 }
-                ballList.get(a).invert();
+                donut.invert();
             }
-            if (ball.isUitscherm() && extraball.isUitscherm()){
+            if (isFinished){
+                reset();
+            } else if (ball.isUitscherm() && extraball.isUitscherm()){
                 verander();
             }
         }
         canvas.drawBitmap(ballMap, ball.getBallX(), ball.getBallY(), null);
-        canvas.drawBitmap(maxCursor, maxCursorX, maxCurosrY, null);
-        canvas.drawBitmap(bigCursor, bigCursorX, bigCursorY, null);
-        canvas.drawBitmap(medCursor, medCursorX, medCursorY, null);
-        canvas.drawBitmap(minCursor, minCursorX, minCursorY, null);
+        canvas.drawBitmap(maxCursor, cursor.getMaxCursorX(), cursor.getMaxCursorY(), null);
+        canvas.drawBitmap(bigCursor, cursor.getBigCursorX(), cursor.getBigCursorY(), null);
+        canvas.drawBitmap(medCursor, cursor.getMedCursorX(), cursor.getMedCursorY(), null);
+        canvas.drawBitmap(minCursor, cursor.getMinCursorX(), cursor.getMinCursorY(), null);
         if (ballList.size() == 2) {
             canvas.drawBitmap(ballMap1, extraball.getBallX(), extraball.getBallY(), null);
         }
@@ -241,30 +233,18 @@ class Game extends View {
         int action = event.getAction();
         int x = (int) event.getX();
         int y = (int) event.getY();
-        int intervalx = (50 + ball.getWidth() / 2 - x);
-        int intervaly = (dHeight / 2 - y);
-        double slope = Math.sqrt(intervalx * intervalx + intervaly * intervaly);
-        double vergroting = ball.getStandardspeed() / slope;
-        double vergrootx = vergroting * intervalx;
-        double vergrooty = vergroting * intervaly;
+        this.cursor.vergroot(x, y, dHeight);
         for (int a = 0; a < ballList.size(); a++) {
             if (!ball.isFired()) {
                 if (ballList.size()==2) {
                     extraball.startPosition(dHeight);
                 }
-                bigCursorX = -(int) vergrootx * 65 / 10 + (ball.getWidth() / 2 + 50 - bigCursor.getWidth() / 2);
-                bigCursorY = -(int) vergrooty * 65 / 10 + (dHeight / 2 - bigCursor.getHeight() / 2);
-                medCursorX = -(int) vergrootx * 4 + (ball.getWidth() / 2 + 50 - medCursor.getWidth() / 2);
-                medCursorY = -(int) vergrooty * 4 + (dHeight / 2 - medCursor.getHeight() / 2);
-                minCursorX = -(int) vergrootx * 2 + (ball.getWidth() / 2 + 50 - minCursor.getWidth() / 2);
-                minCursorY = -(int) vergrooty * 2 + (dHeight / 2 - minCursor.getHeight() / 2);
-                maxCursorX = -(int) vergrootx * 95 / 10 + (ball.getWidth() / 2 + 50 - maxCursor.getWidth() / 2);
-                maxCurosrY = -(int) vergrooty * 95 / 10 + (dHeight / 2 - maxCursor.getHeight() / 2);
+                this.cursor.coords(dHeight);
             }
             if (action == MotionEvent.ACTION_UP) {
                 if (!ballList.get(a).isFired()) {
-                    speedX = -(int) vergrootx;
-                    speedY = -(int) vergrooty;
+                    speedX = -(int) this.cursor.getVergrootX();
+                    speedY = -(int) this.cursor.getVergrootY();
                     if (speedY < 0) {
                         speedY *= -1;
                         ballList.get(a).setGoingUp(true);
@@ -287,13 +267,10 @@ class Game extends View {
                         extraball.setSpeedX(ball.getSpeedX());
                         extraball.setSpeedY(ball.getSpeedY());
                     }
-                    maxCursorX = -80;
-                    bigCursorX = -80;
-                    medCursorX = -80;
-                    minCursorX = -80;
+                    this.cursor.remove();
                     if (a == 0){
-                        pogingen--;
-                        pogingTekst.setText(pogingen + " X");
+                        levels.subsPogingen();
+                        pogingTekst.setText(levels.getPogingen() + " X");
                     }
                     ballList.get(a).setFired(true);
                 }
@@ -326,25 +303,21 @@ class Game extends View {
         }
     }
 
-    public void resetLevel() {
-        levels = new Level(dWidth,dHeight, getResources());
-    }
-
     public void verander() {
         reset();
 
-        if (pogingen == 0) {
+        if (levels.getPogingen() == 0) {
             poging1.setImageResource(R.drawable.ball_full);
-            pogingen = 3;
-            pogingTekst.setText(pogingen + " X");
-            levens--;
-            resetLevel();
+            levels.resetPogingen();
+            pogingTekst.setText(levels.getPogingen() + " X");
+            levels.subsLevens();
+            levels.resetLevel();
         }
         displayLevens();
-        if (levens == 0) {
+        if (levels.getLevens() == 0) {
             Intent intent = new Intent(getContext(), GameOver.class);
             Bundle bundle = new Bundle();
-            bundle.putString("score", score + "");
+            bundle.putString("score", levels.getScore() + "");
             intent.putExtras(bundle);
             getContext().startActivity(intent);
             Activity activity = (Activity)getContext();
@@ -353,23 +326,22 @@ class Game extends View {
     }
 
     public void displayLevens() {
-        if (levens == 3) {
-            leven1.setImageResource(R.drawable.hearticon);
-            leven2.setImageResource(R.drawable.hearticon);
-            leven3.setImageResource(R.drawable.hearticon);
-        } else if (levens == 2) {
-            leven1.setImageResource(R.drawable.hearticon_empty);
-            leven2.setImageResource(R.drawable.hearticon);
-            leven3.setImageResource(R.drawable.hearticon);
-        } else if (levens == 1) {
-            leven1.setImageResource(R.drawable.hearticon_empty);
-            leven2.setImageResource(R.drawable.hearticon_empty);
-            leven3.setImageResource(R.drawable.hearticon);
-        } else if (levens == 0) {
-            leven1.setImageResource(R.drawable.hearticon_empty);
-            leven2.setImageResource(R.drawable.hearticon_empty);
-            leven3.setImageResource(R.drawable.hearticon_empty);
+        leven1.setImageResource(R.drawable.hearticon);
+        leven2.setImageResource(R.drawable.hearticon);
+        leven3.setImageResource(R.drawable.hearticon);
+        switch (levels.getLevens()) {
+            case 2:
+                leven1.setImageResource(R.drawable.hearticon_empty);
+                break;
+            case 1:
+                leven1.setImageResource(R.drawable.hearticon_empty);
+                leven2.setImageResource(R.drawable.hearticon_empty);
+                break;
+            case 0:
+                leven1.setImageResource(R.drawable.hearticon_empty);
+                leven2.setImageResource(R.drawable.hearticon_empty);
+                leven3.setImageResource(R.drawable.hearticon_empty);
+                break;
         }
     }
-
 }

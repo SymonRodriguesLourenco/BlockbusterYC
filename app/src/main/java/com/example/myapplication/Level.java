@@ -14,11 +14,16 @@ import java.util.ArrayList;
 
 public class Level extends ArrayList<ArrayList<Block>>{
 
-    int padding;
-    int dWidth, dHeight;
-    Resources resources;
+    private int padding;
+    private int dWidth, dHeight;
+    private Resources resources;
+    private int levens, pogingen, score;
+
 
     public Level(int dWidth, int dHeight, Resources resources){
+        this.levens = 3;
+        this.pogingen = 3;
+        this.score = 0;
         this.dWidth = dWidth;
         this.dHeight = dHeight;
         this.resources = resources;
@@ -29,6 +34,57 @@ public class Level extends ArrayList<ArrayList<Block>>{
         Level4();
     }
 
+    public void addScore(int score){
+        this.score += score;
+    }
+
+    public void subsScore(int score){
+        this.score -= score;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getLevens() {
+        return levens;
+    }
+
+    public void resetPogingen(){
+        this.pogingen = 3;
+    }
+
+    public void addLevens(){
+        this.levens ++;
+    }
+
+    public void addPogingen(){
+        this.pogingen ++;
+    }
+
+    public void subsLevens(){
+        this.levens -= 1;
+    }
+
+    public void subsPogingen(){
+        this.pogingen --;
+    }
+
+    public int getPogingen() {
+        return pogingen;
+    }
+
+    public void resetLevel(){
+        this.clear();
+        Level1();
+        Level2();
+        Level3();
+        Level4();
+    }
 
     private void Level1() {
         ArrayList<Block> tijdelijk = new ArrayList<>();

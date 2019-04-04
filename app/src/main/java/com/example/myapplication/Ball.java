@@ -7,7 +7,6 @@ public class Ball {
     private int ballX, ballY;
     private int width, height;
     private int speedX, speedY;
-    private double standardspeed;
     private boolean goingForward, goingUp;
     private boolean fired, uitscherm;
     private String ballPowerup;
@@ -27,7 +26,6 @@ public class Ball {
         this.height = height;
         this.speedX = 0;
         this.speedY = 0;
-        this.standardspeed = Math.sqrt(800);
         this.fired = false;
         this.goingUp = false;
         this.goingForward = true;
@@ -93,10 +91,6 @@ public class Ball {
 
     public void setSpeedY(int speedY) {
         this.speedY = speedY;
-    }
-
-    public double getStandardspeed(){
-        return standardspeed;
     }
 
     public void setBallPowerup(String ballPowerup){
