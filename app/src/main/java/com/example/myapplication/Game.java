@@ -7,13 +7,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
@@ -30,6 +35,7 @@ class Game extends View {
     Display display;
     Point point;
     int dWidth, dHeight;
+    MediaPlayer player;
 
     //voor de pogingen
     ImageView poging1, leven1, leven2, leven3;
@@ -77,7 +83,6 @@ class Game extends View {
         display.getSize(point);
         dWidth = point.x;
         dHeight = point.y;
-
         this.poging1 = poging1;
         this.pogingTekst = pogingTekst;
         this.leven1 = leven1;
@@ -342,6 +347,26 @@ class Game extends View {
                 leven2.setImageResource(R.drawable.hearticon_empty);
                 leven3.setImageResource(R.drawable.hearticon_empty);
                 break;
+        }
+    }
+
+    public void play(){
+        if (player == null) {
+            player = MediaPlayer.create(getContext(), R.raw.clack);
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopPlayer();
+                }
+            });
+        }
+        player.start();
+    }
+
+    private void stopPlayer() {
+        if (player != null) {
+            player.release();
+            player = null;
         }
     }
 }
