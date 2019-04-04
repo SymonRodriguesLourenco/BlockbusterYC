@@ -29,6 +29,7 @@ public class Level extends ArrayList<ArrayList<Block>>{
         Level4();
     }
 
+
     private void Level1() {
         ArrayList<Block> tijdelijk = new ArrayList<>();
         int blockdim = dHeight/100*20;
@@ -46,8 +47,8 @@ public class Level extends ArrayList<ArrayList<Block>>{
         int finishHeight= dHeight-padding;
         tijdelijk.add(new Finish(dWidth-blockdim/2, dHeight/2+blockdim/4, finishWidth, finishHeight, resources));
         tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, padding+blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, padding+blockdim/2+blockdim, blockdim, blockdim, resources));
-        tijdelijk.add(new Powerupblock(dWidth-blockdim - blockdim/2, dHeight-blockdim/2, blockdim, blockdim, "", resources));
+        tijdelijk.add(new Powerupblock(dWidth-blockdim - blockdim/2, padding+blockdim/2+blockdim, blockdim, blockdim, "", resources));
+        tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, dHeight-blockdim/2, blockdim, blockdim, resources));
         tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, dHeight-blockdim/2-blockdim, blockdim, blockdim, resources));
         tijdelijk.add(new Hard(dWidth/2, dHeight/2, blockdim*2, blockdim*2, resources));
         this.add(tijdelijk);

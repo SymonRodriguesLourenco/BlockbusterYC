@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
@@ -37,10 +38,13 @@ class Game extends View {
     //voor de pogingen
     public int pogingen = 3, levens = 3;
     public ImageView poging1, leven1, leven2, leven3;
-    public TextView pogingTekst;
+    public TextView pogingTekst, scoreLabel;
     public Bitmap be, bf, he, hf;
     int level = 0;
     Level levels;
+
+    //voor de highscore
+    private int score = 0;
 
 //  voor het updaten van het scherm in miliseconde:
     final long UPDATE_MILLIS = 1/3000;
@@ -67,7 +71,7 @@ class Game extends View {
 //  of het spel gestart is en de bal weggeschoten is
     boolean touched, isFinished=false;
 
-    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3) {
+    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3, TextView scoreLabel) {
         super(context);
         handler = new Handler();
         runnable = new Runnable() {
@@ -87,6 +91,7 @@ class Game extends View {
         this.leven1 = leven1;
         this.leven2 = leven2;
         this.leven3 = leven3;
+        this.scoreLabel = scoreLabel;
 
         be = BitmapFactory.decodeResource(getResources() ,R.drawable.ball_eaten);
         bf = BitmapFactory.decodeResource(getResources(), R.drawable.ball_full);
@@ -97,16 +102,11 @@ class Game extends View {
         bWidth = dHeight/100*8;
 
 
-        //        ====================================================================
+//        ====================================================================
         ball = new Ball(bWidth, bHeight, "");
         extraball = new Ball(bWidth, bHeight, "");
         ball.startPosition(dHeight);
         extraball.setPos(-1000, -1000);
-//
-//        blocks.add(new Hard(dWidth/2, dHeight/100*25, bWidth, bHeight, getResources()));
-//        blocks.add(new Medium(dWidth/2, dHeight/100*50, bWidth, bHeight, getResources()));
-//        blocks.add(new Soft(dWidth/2, dHeight/100*75, bWidth, bHeight, getResources()));
-//        blocks.add(new Finish(dWidth-150, dHeight/2, 300, 300, getResources()));
         levels = new Level(dWidth,dHeight, getResources());
 //        =====================================================================
 
@@ -133,6 +133,12 @@ class Game extends View {
     protected void onDraw(Canvas canvas) {
         if(isFinished){
             level+=1;
+            ball.setBallPowerup("");
+            ballList.remove(extraball);
+            extraball.setUitscherm(true);
+            score += 100 * level;
+            score += pogingen * 50;
+            scoreLabel.setText("Score : " + score);
             pogingen = 3;
             pogingTekst.setText(pogingen+ " X");
             isFinished = false;
@@ -148,14 +154,11 @@ class Game extends View {
                     boolean uitkomst = ballList.get(a).borderBounce(dWidth, dHeight);
                     if (uitkomst) {
                         ballList.get(a).setUitscherm(true);
-                        if (ball.isUitscherm() && extraball.isUitscherm()){
-                            verander();
-                        }
                     }
                 }
                 for (int i = 0; i < blocks.size(); i++) {
                     if (blocks.get(i) instanceof Finish) {
-                        hitBlock = ((Finish) blocks.get(i)).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), 1);
+                        hitBlock = ((Finish) blocks.get(i)).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight(), 50);
                         if (hitBlock) {
                             isFinished = true;
                             reset();
@@ -164,12 +167,8 @@ class Game extends View {
                     } else {
                         hitBlock = blocks.get(i).hit(ballList.get(a).getBallX(), ballList.get(a).getBallY(), ballList.get(a).getWidth(), ballList.get(a).getHeight());
                         if (hitBlock) {
-                            int hits = blocks.get(i).getHitsLeft();
-                            hits--;
-                            blocks.get(i).setHitsLeft(hits);
-                            if (ballList.get(a).getBallPowerup() == "powerball") {
-                                blocks.get(i).setHitsLeft(0);
-                            } else {
+                            boolean power = blocks.get(i).hit(ballList.get(a).getBallPowerup());
+                            if (!power) {
                                 if (blocks.get(i).isFromLeft()) {
                                     ballList.get(a).setInvertX(true);
                                     ballList.get(a).countXadd();
@@ -193,20 +192,11 @@ class Game extends View {
                                         pogingTekst.setText(pogingen+ " X");
                                         break;
                                     case "levens":
-                                        if (levens <= 3){
-                                            if (levens == 2) {
-                                                leven1.setImageResource(R.drawable.hearticon);
-                                            } else if (levens == 1) {
-                                                leven2.setImageResource(R.drawable.hearticon);
-                                            } else if (levens == 0) {
-                                                leven3.setImageResource(R.drawable.hearticon);
-                                                Intent intent = new Intent(getContext(), MainActivity.class);
-                                                getContext().startActivity(intent);
-                                                Activity activity = (Activity)getContext();
-                                                activity.finish();
-                                            }}
-                                        levens++;
-                                        break;
+                                        if (levens < 3) {
+                                            levens++;
+                                            displayLevens();
+                                            break;
+                                        }
                                     case "multiball":
                                         ball.setBallPowerup("multiball");
                                         break;
@@ -215,20 +205,28 @@ class Game extends View {
                                         break;
                                 }
                             }
-                            blocks.get(i).remove();
+                            if(blocks.get(i).remove()) {
+                                score -= 25;
+                                scoreLabel.setText("Score : " + score   );
+                            }
                         }
                         blocks.get(i).draw(canvas);
                     }
                 }
                 ballList.get(a).invert();
             }
+            if (ball.isUitscherm() && extraball.isUitscherm()){
+                verander();
+            }
         }
         canvas.drawBitmap(ballMap, ball.getBallX(), ball.getBallY(), null);
-        canvas.drawBitmap(ballMap1, extraball.getBallX(), extraball.getBallY(), null);
         canvas.drawBitmap(maxCursor, maxCursorX, maxCurosrY, null);
         canvas.drawBitmap(bigCursor, bigCursorX, bigCursorY, null);
         canvas.drawBitmap(medCursor, medCursorX, medCursorY, null);
         canvas.drawBitmap(minCursor, minCursorX, minCursorY, null);
+        if (ballList.size() == 2) {
+            canvas.drawBitmap(ballMap1, extraball.getBallX(), extraball.getBallY(), null);
+        }
         handler.postDelayed(runnable, UPDATE_MILLIS);
     }
 
@@ -313,14 +311,17 @@ class Game extends View {
         touched = false;
         ball.setFired(false);
         poging1.setImageResource(R.drawable.ball_full);
-        if (ball.getBallPowerup().equals("multiball")){
-            ballList.add(extraball);
-            ball.setBallPowerup("none");
+        if (ball.getBallPowerup().equals("none")){
+            ballList.remove(extraball);
         }
         else if (ball.getBallPowerup().equals("powerballnotactive")){
             ball.setBallPowerup("powerball");
         }
         else if (ball.getBallPowerup().equals("powerball")){
+            ball.setBallPowerup("none");
+
+        }else if (ball.getBallPowerup().equals("multiball")){
+            ballList.add(extraball);
             ball.setBallPowerup("none");
         }
     }
@@ -335,21 +336,39 @@ class Game extends View {
         if (pogingen == 0) {
             poging1.setImageResource(R.drawable.ball_full);
             pogingen = 3;
-            levens--;
             pogingTekst.setText(pogingen + " X");
+            levens--;
             resetLevel();
         }
-
-        if (levens == 2) {
-            leven1.setImageResource(R.drawable.hearticon_empty);
-        } else if (levens == 1) {
-            leven2.setImageResource(R.drawable.hearticon_empty);
-        } else if (levens == 0) {
-            leven3.setImageResource(R.drawable.hearticon_empty  );
-            Intent intent = new Intent(getContext(), MainActivity.class);
+        displayLevens();
+        if (levens == 0) {
+            Intent intent = new Intent(getContext(), GameOver.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("score", score + "");
+            intent.putExtras(bundle);
             getContext().startActivity(intent);
             Activity activity = (Activity)getContext();
             activity.finish();
+        }
+    }
+
+    public void displayLevens() {
+        if (levens == 3) {
+            leven1.setImageResource(R.drawable.hearticon);
+            leven2.setImageResource(R.drawable.hearticon);
+            leven3.setImageResource(R.drawable.hearticon);
+        } else if (levens == 2) {
+            leven1.setImageResource(R.drawable.hearticon_empty);
+            leven2.setImageResource(R.drawable.hearticon);
+            leven3.setImageResource(R.drawable.hearticon);
+        } else if (levens == 1) {
+            leven1.setImageResource(R.drawable.hearticon_empty);
+            leven2.setImageResource(R.drawable.hearticon_empty);
+            leven3.setImageResource(R.drawable.hearticon);
+        } else if (levens == 0) {
+            leven1.setImageResource(R.drawable.hearticon_empty);
+            leven2.setImageResource(R.drawable.hearticon_empty);
+            leven3.setImageResource(R.drawable.hearticon_empty);
         }
     }
 
