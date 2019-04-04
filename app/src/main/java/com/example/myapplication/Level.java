@@ -23,13 +23,15 @@ public class Level extends ArrayList<ArrayList<Block>>{
         this.dHeight = dHeight;
         this.resources = resources;
         padding = dHeight/100*6;
-//        Level1();
-//        Level2();
-//        Level3();
-//        Level4();
-//        Level5();
-//        Level6();
+        Level1();
+        Level2();
+        Level3();
+        Level4();
+        Level5();
+        Level6();
         Level7();
+        Level8();
+        Level9();
     }
 
 
@@ -109,7 +111,35 @@ public class Level extends ArrayList<ArrayList<Block>>{
         ArrayList<Block> tijdelijk = new ArrayList<>();
         int blockdim = dHeight/100*15;
         int finishWidth = blockdim;
+        tijdelijk.add(new Medium (dWidth/2-blockdim, dHeight/2-finishWidth, blockdim, blockdim, resources));
+        tijdelijk.add(new Soft(dWidth/2-blockdim, dHeight/2, blockdim, blockdim, resources));
+        tijdelijk.add(new Medium (dWidth/2-blockdim, dHeight/2+finishWidth, blockdim, blockdim, resources));
+        tijdelijk.add(new Soft (dWidth/2, dHeight/2-finishWidth, blockdim, blockdim, resources));
         tijdelijk.add(new Finish(dWidth/2, dHeight/2, finishWidth, finishWidth, resources));
+        tijdelijk.add(new Soft (dWidth/2, dHeight/2+finishWidth, blockdim, blockdim, resources));
+        this.add(tijdelijk);
+    }
+
+    private void Level8(){
+        ArrayList<Block> tijdelijk = new ArrayList<>();
+        int blockdim = dHeight/100*15;
+        int finishWidth = blockdim;
+        tijdelijk.add(new Hard (dWidth/2-blockdim, dHeight/2-finishWidth, blockdim, blockdim, resources));
+        tijdelijk.add(new Hard(dWidth/2-blockdim, dHeight/2, blockdim, blockdim, resources));
+        tijdelijk.add(new Hard (dWidth/2-blockdim, dHeight/2+finishWidth, blockdim, blockdim, resources));
+        tijdelijk.add(new Hard (dWidth/2, dHeight/2-finishWidth, blockdim, blockdim, resources));
+        tijdelijk.add(new Finish(dWidth/2, dHeight/2, finishWidth, finishWidth, resources));
+        tijdelijk.add(new Hard (dWidth/2, dHeight/2+finishWidth, blockdim, blockdim, resources));
+        tijdelijk.add(new Powerupblock(blockdim*2, dHeight-blockdim/2, blockdim, blockdim, "", resources));
+        this.add(tijdelijk);
+    }
+
+    private void Level9(){
+        ArrayList<Block> tijdelijk = new ArrayList<>();
+        int blockdim = dHeight/100*15;
+        int finishWidth = blockdim;
+        int finishHeight= blockdim;
+        tijdelijk.add(new Finish(dWidth-blockdim/2, dHeight/2, finishWidth, finishHeight, resources));
         this.add(tijdelijk);
     }
 
