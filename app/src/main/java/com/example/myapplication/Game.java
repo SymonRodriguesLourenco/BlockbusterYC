@@ -135,6 +135,8 @@ class Game extends View {
         if(isFinished){
             level+=1;
             ball.setBallPowerup("");
+            ballList.remove(extraball);
+            extraball.setUitscherm(true);
             score += 100 * level;
             score += pogingen * 50;
             scoreLabel.setText("Score : " + score);
