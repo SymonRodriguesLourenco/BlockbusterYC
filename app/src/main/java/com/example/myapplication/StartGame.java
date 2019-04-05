@@ -20,11 +20,6 @@ public class StartGame extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_view);
-
-
-
-
-
     }
 
     protected void onStart(){

@@ -25,7 +25,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="120dp"
         android:fontFamily="@font/luckiest_guy"
-        android:text="Highscore : 300"
+        android:text="Highscore : 0"
         android:textSize="50dp" />
 
     <Button

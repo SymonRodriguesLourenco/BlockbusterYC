@@ -99,7 +99,7 @@
                 android:layout_alignParentEnd="false"
                 android:layout_marginTop="-1dp"
                 android:fontFamily="@font/luckiest_guy"
-                android:text="Score  : 100"
+                android:text="Score  : 0"
                 android:textAlignment="center"
                 android:textSize="20dp" />
         </RelativeLayout>

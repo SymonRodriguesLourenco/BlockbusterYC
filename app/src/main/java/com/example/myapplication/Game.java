@@ -38,7 +38,7 @@ class Game extends View {
     ImageView poging1, leven1, leven2, leven3;
     TextView pogingTekst, scoreLabel, levelLabel;
     Bitmap be, bf, he, hf;
-    Level levels;
+    Level level;
 
     //  voor het updaten van het scherm in miliseconde:
     final long UPDATE_MILLIS = 1/3000;
@@ -52,14 +52,11 @@ class Game extends View {
 
     //  Blocks
     List<Block> blocks = new ArrayList<>();
-    int bHeight, bWidth;
+    int bHeight;
     boolean hitBlock;
 
     //  als de bal naar links gaat is going forward false anders true, als de bal naar boven gaat i goingup true,anders false
     Bitmap maxCursor, bigCursor, medCursor, minCursor;
-
-    //  of het spel gestart is en de bal weggeschoten is
-    boolean touched, isFinished=false;
 
     public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3, TextView scoreLabel, TextView levelLabel) {
         super(context);
@@ -89,16 +86,15 @@ class Game extends View {
         hf = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon);
 
         bHeight = dHeight/100*8;
-        bWidth = dHeight/100*8;
 
-        ball = new Ball(bWidth, bHeight, "");
-        extraball = new Ball(bWidth, bHeight, "");
+        ball = new Ball(bHeight, bHeight, "");
+        extraball = new Ball(bHeight, bHeight, "");
         ball.startPosition(dHeight);
         extraball.setPos(-1000, -1000);
 
         this.cursor = new Cursor(50, bHeight);
 
-        levels = new Level(dWidth,dHeight, getResources());
+        level = new Level(dWidth,dHeight, getResources());
 
         ballMap = defineBitmap(R.drawable.ball_full, ball.getWidth(),ball.getHeight());
         ballMap1 = defineBitmap(R.drawable.ball_full, extraball.getWidth(),extraball.getHeight());
@@ -109,27 +105,30 @@ class Game extends View {
         medCursor = defineBitmap(R.drawable.ball, cursor.getMedCursorSize(), cursor.getMedCursorSize());
         minCursor = defineBitmap(R.drawable.ball, cursor.getMinCursorSize(), cursor.getMinCursorSize());
 
-        pogingTekst.setText(levels.getPogingen()+ " X");
+        pogingTekst.setText(level.getPogingen()+ " X");
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(isFinished){
+        if(level.isFinished()){
             canvas.drawColor(Color.TRANSPARENT);
-            levels.levelUp();
+            level.levelUp();
             ball.setBallPowerup("");
             ballList.remove(extraball);
             extraball.setUitscherm(true);
-            levels.addScore((100*levels.getLevel() + levels.getPogingen()*50));
-            scoreLabel.setText("Score : " + levels.getScore());
-            levelLabel.setText("Level : " + (levels.getLevel() + 1));
-            levels.resetPogingen();
-            pogingTekst.setText(levels.getPogingen()+ " X");
-            isFinished = false;
+            level.addScore((100* level.getLevel() + level.getPogingen()*50));
+            scoreLabel.setText("Score : " + level.getScore());
+            levelLabel.setText("Level : " + (level.getLevel() + 1));
+            level.resetPogingen();
+            pogingTekst.setText(level.getPogingen()+ " X");
+            if (level.getLevel() == level.size()){
+                endGame();
+            }
+            level.setFinished(false);
         }
-        if(levels.size() > levels.getLevel()) {
-            blocks = levels.get(levels.getLevel());
+        if(level.size() > level.getLevel()) {
+            blocks = level.get(level.getLevel());
             for (Block block : blocks){
                 block.draw(canvas);
             }
@@ -137,7 +136,7 @@ class Game extends View {
                 for (Block block : blocks) {
                     block.bounce(donut.getSpeedX(), donut.getSpeedY(), donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight(), donut.isGoingUp(), donut.isGoingForward());
                 }
-                if(touched && !isFinished) {
+                if(level.isTouched() && !level.isFinished()) {
                     boolean uitkomst = donut.borderBounce(dWidth, dHeight);
                     if (ball.isSound()){
                         this.play();
@@ -150,7 +149,7 @@ class Game extends View {
                     if (block instanceof Finish) {
                         hitBlock = ((Finish) block).hit(donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight(), 50);
                         if (hitBlock) {
-                            isFinished = true;
+                            level.setFinished(true);
                         }
                     } else {
                         hitBlock = block.hit(donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight());
@@ -164,13 +163,13 @@ class Game extends View {
                                 Powerupblock blocky = (Powerupblock) block;
                                 switch (blocky.getPowerup()) {
                                     case "pogingen":
-                                        levels.addPogingen();
-                                        pogingTekst.setText(levels.getPogingen()+ " X");
+                                        level.addPogingen();
+                                        pogingTekst.setText(level.getPogingen()+ " X");
                                         Toast.makeText(getContext(),"+1 poging",Toast.LENGTH_SHORT).show();
                                         break;
                                     case "levens":
-                                        if (levels.getLevens() < 3) {
-                                            levels.addLevens();
+                                        if (level.getLevens() < 3) {
+                                            level.addLevens();
                                             displayLevens();
                                             Toast.makeText(getContext(), "+1 leven", Toast.LENGTH_SHORT).show();
                                             break;
@@ -186,15 +185,15 @@ class Game extends View {
                                 }
                             }
                             if(block.remove()) {
-                                levels.subsScore(25);
-                                scoreLabel.setText("Score : " + levels.getScore()   );
+                                level.subsScore(25);
+                                scoreLabel.setText("Score : " + level.getScore()   );
                             }
                         }
                     }
                 }
                 donut.invert();
             }
-            if (isFinished){
+            if (level.isFinished()){
                 reset();
             } else if (ball.isUitscherm() && extraball.isUitscherm()){
                 verander();
@@ -231,7 +230,7 @@ class Game extends View {
                 this.cursor.coords(dHeight);
             }
             if (action == MotionEvent.ACTION_UP) {
-                if (!donut.isFired()) {
+                if (!donut.isFired() && level.isTouched()) {
                     donut.ballSpeed(this.cursor.getVergrootX(), this.cursor.getVergrootY());
                     if (ballList.size() > 1 && extraball == donut ) {
                         extraball.multiBall(ball.isGoingUp(), ball.getSpeedX(), ball.getSpeedY());
@@ -239,20 +238,20 @@ class Game extends View {
                     this.cursor.remove();
                     donut.setFired(true);
                     if (ball == donut){
-                        levels.subsPogingen();
-                        pogingTekst.setText(levels.getPogingen() + " X");
+                        level.subsPogingen();
+                        pogingTekst.setText(level.getPogingen() + " X");
                     }
                 }
             }
         }
         poging1.setImageResource(R.drawable.ball_eaten);
-        touched = true;
+        level.setTouched(true);
         return true;
     }
 
     public void reset(){
         ball.reset(dHeight);
-        touched = false;
+        level.setTouched(false);
         poging1.setImageResource(R.drawable.ball_full);
         if (ball.getBallPowerup().equals("none")){
             ballList.remove(extraball);
@@ -269,24 +268,29 @@ class Game extends View {
         }
     }
 
+    public void endGame(){
+        Intent intent = new Intent(getContext(), GameOver.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("score", level.getScore() + "");
+        bundle.putBoolean("finished", level.isFinished());
+        intent.putExtras(bundle);
+        getContext().startActivity(intent);
+        Activity activity = (Activity)getContext();
+        activity.finish();
+    }
+
     public void verander() {
         reset();
 
-        if (levels.getPogingen() == 0) {
+        if (level.getPogingen() == 0) {
             poging1.setImageResource(R.drawable.ball_full);
-            levels.resetPogingen();
-            pogingTekst.setText(levels.getPogingen() + " X");
-            levels.subsLevens();
+            level.resetPogingen();
+            pogingTekst.setText(level.getPogingen() + " X");
+            level.subsLevens();
         }
         displayLevens();
-        if (levels.getLevens() == 0) {
-            Intent intent = new Intent(getContext(), GameOver.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("score", levels.getScore() + "");
-            intent.putExtras(bundle);
-            getContext().startActivity(intent);
-            Activity activity = (Activity)getContext();
-            activity.finish();
+        if (level.getLevens() == 0) {
+            endGame();
         }
     }
 
@@ -294,7 +298,7 @@ class Game extends View {
         leven1.setImageResource(R.drawable.hearticon);
         leven2.setImageResource(R.drawable.hearticon);
         leven3.setImageResource(R.drawable.hearticon);
-        switch (levels.getLevens()) {
+        switch (level.getLevens()) {
             case 2:
                 leven1.setImageResource(R.drawable.hearticon_empty);
                 break;

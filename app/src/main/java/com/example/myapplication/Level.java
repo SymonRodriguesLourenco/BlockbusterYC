@@ -19,6 +19,7 @@ public class Level extends ArrayList<ArrayList<Block>>{
     private Resources resources;
     private int levens, pogingen, score;
     private int level;
+    private boolean finished, touched;
 
 
     public Level(int dWidth, int dHeight, Resources resources){
@@ -74,6 +75,14 @@ public class Level extends ArrayList<ArrayList<Block>>{
         this.levens ++;
     }
 
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
     public void addPogingen(){
         this.pogingen ++;
     }
@@ -105,6 +114,14 @@ public class Level extends ArrayList<ArrayList<Block>>{
         Level10();
     }
 
+    public boolean isTouched() {
+        return touched;
+    }
+
+    public void setTouched(boolean touched) {
+        this.touched = touched;
+    }
+
     private void Level1() {
         ArrayList<Block> tijdelijk = new ArrayList<>();
         int blockdim = dHeight/100*20;
@@ -128,6 +145,7 @@ public class Level extends ArrayList<ArrayList<Block>>{
         tijdelijk.add(new Powerupblock(dWidth/2, dHeight/2, blockdim*2, blockdim*2, "", resources));
         this.add(tijdelijk);
     }
+
     private void Level3() {
         ArrayList<Block> tijdelijk = new ArrayList<>();
         int blockdim = dHeight/100*15;

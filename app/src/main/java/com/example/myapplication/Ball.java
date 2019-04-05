@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-import com.example.myapplication.blokjes.Block;
-
 public class Ball {
 
     private int ballX, ballY;
@@ -154,25 +152,9 @@ public class Ball {
         return sound;
     }
 
-    public void setInvertX(boolean invertX) {
-        this.invertX = invertX;
-    }
-
-    public void setInvertY(boolean invertY) {
-        this.invertY = invertY;
-    }
-
     public void setPos(int ballX, int ballY) {
         this.ballX = ballX;
         this.ballY = ballY;
-    }
-
-    public void countXadd(){
-        this.countX ++;
-    }
-
-    public void countYadd(){
-        this.countY ++;
     }
 
     public void invert(){

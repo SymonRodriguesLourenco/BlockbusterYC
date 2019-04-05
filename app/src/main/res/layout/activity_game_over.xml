@@ -32,7 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="120dp"
         android:fontFamily="@font/luckiest_guy"
-        android:text="150"
+        android:text="0"
         android:textSize="40dp" />
 
     <TextView
