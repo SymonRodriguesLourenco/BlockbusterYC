@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -37,7 +38,6 @@ class Game extends View {
     ImageView poging1, leven1, leven2, leven3;
     TextView pogingTekst, scoreLabel, levelLabel;
     Bitmap be, bf, he, hf;
-    int level = 0;
     Level levels;
 
     //  voor het updaten van het scherm in miliseconde:
@@ -46,8 +46,6 @@ class Game extends View {
     //  bal
     Ball ball, extraball;
     Bitmap ballMap, ballMap1;
-    //  waarde die per x aantal miliseconde toegevoegt wil worden
-    int speedX = 0, speedY = 0;
     List<Ball> ballList = new ArrayList<>();
 
     Cursor cursor;
@@ -59,8 +57,6 @@ class Game extends View {
 
     //  als de bal naar links gaat is going forward false anders true, als de bal naar boven gaat i goingup true,anders false
     Bitmap maxCursor, bigCursor, medCursor, minCursor;
-    //  de coordinaten van de maxCursor
-    int maxCursorX, maxCursorY, bigCursorX, bigCursorY, medCursorX, medCursorY, minCursorX, minCursorY;
 
     //  of het spel gestart is en de bal weggeschoten is
     boolean touched, isFinished=false;
@@ -109,15 +105,9 @@ class Game extends View {
         ballList.add(ball);
 
         maxCursor = defineBitmap(R.drawable.ball, cursor.getMaxCursorSize(), cursor.getMaxCursorSize());
-        maxCursorX = -1000;
-
         bigCursor = defineBitmap(R.drawable.ball, cursor.getBigCursorSize(), cursor.getBigCursorSize());
-        bigCursorX = -1000;
         medCursor = defineBitmap(R.drawable.ball, cursor.getMedCursorSize(), cursor.getMedCursorSize());
-        medCursorX = -1000;
-
         minCursor = defineBitmap(R.drawable.ball, cursor.getMinCursorSize(), cursor.getMinCursorSize());
-        minCursorX = -1000;
 
         pogingTekst.setText(levels.getPogingen()+ " X");
     }
@@ -126,19 +116,20 @@ class Game extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if(isFinished){
-            level+=1;
+            canvas.drawColor(Color.TRANSPARENT);
+            levels.levelUp();
             ball.setBallPowerup("");
             ballList.remove(extraball);
             extraball.setUitscherm(true);
-            levels.addScore((100*level + levels.getPogingen()*50));
+            levels.addScore((100*levels.getLevel() + levels.getPogingen()*50));
             scoreLabel.setText("Score : " + levels.getScore());
-            levelLabel.setText("Level : " + (level + 1));
+            levelLabel.setText("Level : " + (levels.getLevel() + 1));
             levels.resetPogingen();
             pogingTekst.setText(levels.getPogingen()+ " X");
             isFinished = false;
         }
-        if(levels.size() > level) {
-            blocks = levels.get(level);
+        if(levels.size() > levels.getLevel()) {
+            blocks = levels.get(levels.getLevel());
             for (Block block : blocks){
                 block.draw(canvas);
             }

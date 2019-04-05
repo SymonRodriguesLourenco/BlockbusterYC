@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="horizontal"
+    tools:context=".GameOver">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="90dp"
+        android:fontFamily="@font/luckiest_guy"
+        android:text="Je hebt gewonnen!!"
+        android:textSize="40dp" />
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
+        android:src="@drawable/ball_full" />
+    <TextView
+        android:id="@+id/scoreLabel1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="120dp"
+        android:fontFamily="@font/luckiest_guy"
+        android:text="150"
+        android:textSize="40dp" />
+    <TextView
+        android:id="@+id/highscoreLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="90dp"
+        android:fontFamily="@font/luckiest_guy"
+        android:text="Highscore : 300"
+        android:textSize="20dp" />
+    <Button
+        android:id="@+id/tryAgain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/luckiest_guy"
+        android:text="Ga naar het beginscherm"
+        android:textAllCaps="false"
+        android:onClick="goToStart"/>
+</RelativeLayout>

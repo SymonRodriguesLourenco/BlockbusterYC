@@ -18,6 +18,7 @@ public class Level extends ArrayList<ArrayList<Block>>{
     private int dWidth, dHeight;
     private Resources resources;
     private int levens, pogingen, score;
+    private int level;
 
 
     public Level(int dWidth, int dHeight, Resources resources){
@@ -27,7 +28,8 @@ public class Level extends ArrayList<ArrayList<Block>>{
         this.dWidth = dWidth;
         this.dHeight = dHeight;
         this.resources = resources;
-        padding = dHeight/100*6;
+        this.level = 0;
+        this.padding = dHeight/100*6;
         Level1();
         Level2();
         Level3();
@@ -46,6 +48,14 @@ public class Level extends ArrayList<ArrayList<Block>>{
 
     public void subsScore(int score){
         this.score -= score;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void levelUp(){
+        this.level ++;
     }
 
     public int getScore() {

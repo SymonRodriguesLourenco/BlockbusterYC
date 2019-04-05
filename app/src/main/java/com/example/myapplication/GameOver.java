@@ -29,7 +29,7 @@ public class GameOver extends AppCompatActivity {
         int highScore = settings.getInt("HIGH_SCORE", 0);
         int val= 0;
         try {
-           val = Integer.parseInt(value);
+            val = Integer.parseInt(value);
         }
         catch (Exception ex) {
             Log.d("skurr", ex.toString());
@@ -51,6 +51,10 @@ public class GameOver extends AppCompatActivity {
 
     public void tryAgain(View view) {
         startActivity(new Intent(getApplicationContext(), StartGame.class));
+    }
+
+    public void goToStart(View view) {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
 }

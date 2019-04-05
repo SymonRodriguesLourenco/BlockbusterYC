@@ -5,43 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context=".MainActivity">
+
+
     <ImageView
-        android:id="@+id/donut"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
-        android:src="@drawable/ball_full" />
-    <Button
-        android:id="@+id/imageButton3"
+        android:layout_marginTop="70dp"
+        android:src="@drawable/pompoen" />
+
+
+    <TextView
+        android:id="@+id/highscoreLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="220dp"
+        android:layout_marginBottom="120dp"
         android:fontFamily="@font/luckiest_guy"
-        android:contentDescription="@string/app_name"
-        android:text="Speel het spel!"
-        />
+        android:text="Highscore : 300"
+        android:textSize="50dp" />
+
     <Button
-        android:id="@+id/highscoreButton"
+        android:id="@+id/tryAgain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
         android:fontFamily="@font/luckiest_guy"
-        android:text="Bekijk de highscores"
+        android:text="Ga naar het beginscherm"
         android:textAllCaps="false"
-        android:onClick="goTohighscore"/>
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/luckiest_guy"
-        android:paddingTop="35dp"
-        android:text="Blockbuster"
-        android:textAlignment="center"
-        android:textSize="36sp" />
+        android:onClick="goToStart"/>
 </RelativeLayout>
