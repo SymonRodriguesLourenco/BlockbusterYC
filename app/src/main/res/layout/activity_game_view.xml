@@ -30,7 +30,7 @@
                 android:src="@drawable/ball_full" />
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/levelLabel"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

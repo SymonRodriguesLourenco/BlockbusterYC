@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class StartGame extends AppCompatActivity {
     ImageView poging1, leven1, leven2, leven3;
-    TextView pogingTekst, scoreLabel;
+    TextView pogingTekst, scoreLabel, levelLabel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +35,8 @@ public class StartGame extends AppCompatActivity {
         leven2 = findViewById(R.id.leven2);
         leven3 = findViewById(R.id.leven3);
         scoreLabel = findViewById(R.id.scoreLabel);
-        Game game = new Game(this, poging1, pogingTekst, leven1, leven2, leven3, scoreLabel);
+        levelLabel = findViewById(R.id.levelLabel);
+        Game game = new Game(this, poging1, pogingTekst, leven1, leven2, leven3, scoreLabel, levelLabel);
         addContentView(game, new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
 

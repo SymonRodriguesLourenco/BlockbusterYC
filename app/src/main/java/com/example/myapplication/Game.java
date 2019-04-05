@@ -25,7 +25,7 @@ import java.util.List;
 
 
 class Game extends View {
-//  voor het runnen van de applicatie:
+    //  voor het runnen van de applicatie:
     Handler handler;
     Runnable runnable;
     Display display;
@@ -35,37 +35,37 @@ class Game extends View {
 
     //voor de pogingen
     ImageView poging1, leven1, leven2, leven3;
-    TextView pogingTekst, scoreLabel;
+    TextView pogingTekst, scoreLabel, levelLabel;
     Bitmap be, bf, he, hf;
     int level = 0;
     Level levels;
 
-//  voor het updaten van het scherm in miliseconde:
+    //  voor het updaten van het scherm in miliseconde:
     final long UPDATE_MILLIS = 1/3000;
 
-//  bal
+    //  bal
     Ball ball, extraball;
     Bitmap ballMap, ballMap1;
-//  waarde die per x aantal miliseconde toegevoegt wil worden
+    //  waarde die per x aantal miliseconde toegevoegt wil worden
     int speedX = 0, speedY = 0;
     List<Ball> ballList = new ArrayList<>();
 
     Cursor cursor;
 
-//  Blocks
+    //  Blocks
     List<Block> blocks = new ArrayList<>();
     int bHeight, bWidth;
     boolean hitBlock;
 
-//  als de bal naar links gaat is going forward false anders true, als de bal naar boven gaat i goingup true,anders false
+    //  als de bal naar links gaat is going forward false anders true, als de bal naar boven gaat i goingup true,anders false
     Bitmap maxCursor, bigCursor, medCursor, minCursor;
-//  de coordinaten van de maxCursor
+    //  de coordinaten van de maxCursor
     int maxCursorX, maxCursorY, bigCursorX, bigCursorY, medCursorX, medCursorY, minCursorX, minCursorY;
 
-//  of het spel gestart is en de bal weggeschoten is
+    //  of het spel gestart is en de bal weggeschoten is
     boolean touched, isFinished=false;
 
-    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3, TextView scoreLabel) {
+    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3, TextView scoreLabel, TextView levelLabel) {
         super(context);
         handler = new Handler();
         runnable = new Runnable() {
@@ -85,6 +85,7 @@ class Game extends View {
         this.leven2 = leven2;
         this.leven3 = leven3;
         this.scoreLabel = scoreLabel;
+        this.levelLabel = levelLabel;
 
         be = BitmapFactory.decodeResource(getResources() ,R.drawable.ball_eaten);
         bf = BitmapFactory.decodeResource(getResources(), R.drawable.ball_full);
@@ -131,6 +132,7 @@ class Game extends View {
             extraball.setUitscherm(true);
             levels.addScore((100*level + levels.getPogingen()*50));
             scoreLabel.setText("Score : " + levels.getScore());
+            levelLabel.setText("Level : " + (level + 1));
             levels.resetPogingen();
             pogingTekst.setText(levels.getPogingen()+ " X");
             isFinished = false;
@@ -142,7 +144,7 @@ class Game extends View {
             }
             for (Ball donut: ballList) {
                 for (Block block : blocks) {
-                  block.bounce(donut.getSpeedX(), donut.getSpeedY(), donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight(), donut.isGoingUp(), donut.isGoingForward());
+                    block.bounce(donut.getSpeedX(), donut.getSpeedY(), donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight(), donut.isGoingUp(), donut.isGoingForward());
                 }
                 if(touched && !isFinished) {
                     boolean uitkomst = donut.borderBounce(dWidth, dHeight);
