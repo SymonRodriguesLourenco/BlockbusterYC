@@ -67,16 +67,8 @@ public class Ball {
         return goingForward;
     }
 
-    public void setGoingForward(boolean goingForward) {
-        this.goingForward = goingForward;
-    }
-
     public boolean isGoingUp() {
         return goingUp;
-    }
-
-    public void setGoingUp(boolean goingUp) {
-        this.goingUp = goingUp;
     }
 
     public boolean isFired() {
@@ -85,14 +77,6 @@ public class Ball {
 
     public void setFired(boolean fired) {
         this.fired = fired;
-    }
-
-    public void setSpeedX(int speedX) {
-        this.speedX = speedX;
-    }
-
-    public void setSpeedY(int speedY) {
-        this.speedY = speedY;
     }
 
     public void setBallPowerup(String ballPowerup){
@@ -115,8 +99,6 @@ public class Ball {
         int maxY = dHeight - height;
         boolean uitkomst = false;
         this.sound = false;
-
-
 
 //          bal gaat naar links
         if ((ballX - speedX) < minX - (this.width *2)) {
@@ -220,5 +202,48 @@ public class Ball {
         }
         countX = 0;
         countY = 0;
+    }
+
+    public void ballSpeed(double vergrootX, double vergrootY){
+        int tempX = -(int) vergrootX;
+        int tempY = -(int) vergrootY;
+        if (tempY < 0) {
+            tempY *= -1;
+            this.goingUp = true;
+        }
+        if (tempX < 0) {
+            tempX *= -1;
+            this.goingForward = false;
+        }
+        this.speedX = tempX;
+        this.speedY = tempY;
+    }
+
+    public void multiBall(boolean up, int speedX, int speedY){
+        if (up){
+            this.goingUp = false;
+        } else {
+            this.goingUp = true;
+        }
+        this.speedX = speedX;
+        this.speedY = speedY;
+    }
+
+    public void reset(int dHeight){
+        this.speedX = 0;
+        this.speedY = 0;
+        this.startPosition(dHeight);
+        this.fired = false;
+    }
+
+    public void bounce(boolean up, boolean down, boolean right, boolean left){
+        if (left | right){
+            this.invertX = true;
+            this.countX ++;
+        }
+        if (up | down){
+            this.invertY = true;
+            this.countY ++;
+        }
     }
 }

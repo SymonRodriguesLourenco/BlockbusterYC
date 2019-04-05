@@ -46,10 +46,6 @@ public class Level extends ArrayList<ArrayList<Block>>{
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public int getLevens() {
         return levens;
     }
@@ -68,6 +64,7 @@ public class Level extends ArrayList<ArrayList<Block>>{
 
     public void subsLevens(){
         this.levens -= 1;
+        resetLevel();
     }
 
     public void subsPogingen(){

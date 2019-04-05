@@ -7,18 +7,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
@@ -169,20 +165,7 @@ class Game extends View {
                             boolean power = block.hit(donut.getBallPowerup());
                             if (!power) {
                                 this.play();
-                                if (block.isFromLeft()) {
-                                    donut.setInvertX(true);
-                                    donut.countXadd();
-                                } else if (block.isFromRight()) {
-                                    donut.setInvertX(true);
-                                    donut.countXadd();
-                                    }
-                                if (block.isFromUp()) {
-                                    donut.setInvertY(true);
-                                    donut.countYadd();
-                                } else if (block.isFromDown()) {
-                                    donut.setInvertY(true);
-                                    donut.countYadd();
-                                }
+                                donut.bounce(block.isFromUp(), block.isFromDown(), block.isFromRight(), block.isFromLeft());
                             }
                             if (block instanceof Powerupblock) {
                                 Powerupblock blocky = (Powerupblock) block;
@@ -243,59 +226,36 @@ class Game extends View {
         int x = (int) event.getX();
         int y = (int) event.getY();
         this.cursor.vergroot(x, y, dHeight);
-        for (int a = 0; a < ballList.size(); a++) {
+        for (Ball donut : ballList) {
             if (!ball.isFired()) {
-                if (ballList.size()==2) {
+                if (ballList.size() > 1) {
                     extraball.startPosition(dHeight);
                 }
                 this.cursor.coords(dHeight);
             }
             if (action == MotionEvent.ACTION_UP) {
-                if (!ballList.get(a).isFired()) {
-                    speedX = -(int) this.cursor.getVergrootX();
-                    speedY = -(int) this.cursor.getVergrootY();
-                    if (speedY < 0) {
-                        speedY *= -1;
-                        ballList.get(a).setGoingUp(true);
-                    }
-                    if (speedX < 0) {
-                        speedX *= -1;
-                        ballList.get(a).setGoingForward(false);
-
-                    }
-                    if (a == 1) {
-                        if (ball.isGoingUp()) {
-                            extraball.setGoingUp(false);
-                        } else {
-                            extraball.setGoingUp(true);
-                        }
-                    }
-                    ballList.get(a).setSpeedY(speedY);
-                    ballList.get(a).setSpeedX(speedX);
-                    if (ballList.size()==2){
-                        extraball.setSpeedX(ball.getSpeedX());
-                        extraball.setSpeedY(ball.getSpeedY());
+                if (!donut.isFired()) {
+                    donut.ballSpeed(this.cursor.getVergrootX(), this.cursor.getVergrootY());
+                    if (ballList.size() > 1 && extraball == donut ) {
+                        extraball.multiBall(ball.isGoingUp(), ball.getSpeedX(), ball.getSpeedY());
                     }
                     this.cursor.remove();
-                    if (a == 0){
+                    donut.setFired(true);
+                    if (ball == donut){
                         levels.subsPogingen();
                         pogingTekst.setText(levels.getPogingen() + " X");
                     }
-                    ballList.get(a).setFired(true);
                 }
-                poging1.setImageResource(R.drawable.ball_eaten);
-                touched = true;
             }
         }
+        poging1.setImageResource(R.drawable.ball_eaten);
+        touched = true;
         return true;
     }
 
     public void reset(){
-        ball.setSpeedX(0);
-        ball.setSpeedY(0);
-        ball.startPosition(dHeight);
+        ball.reset(dHeight);
         touched = false;
-        ball.setFired(false);
         poging1.setImageResource(R.drawable.ball_full);
         if (ball.getBallPowerup().equals("none")){
             ballList.remove(extraball);
@@ -320,7 +280,6 @@ class Game extends View {
             levels.resetPogingen();
             pogingTekst.setText(levels.getPogingen() + " X");
             levels.subsLevens();
-            levels.resetLevel();
         }
         displayLevens();
         if (levels.getLevens() == 0) {
