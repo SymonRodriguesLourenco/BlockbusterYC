@@ -35,7 +35,7 @@ class Game extends View {
 
     //voor de pogingen
     ImageView poging1, leven1, leven2, leven3;
-    TextView pogingTekst, scoreLabel;
+    TextView pogingTekst, scoreLabel, levelLabel;
     Bitmap be, bf, he, hf;
     int level = 0;
     Level levels;
@@ -65,7 +65,7 @@ class Game extends View {
 //  of het spel gestart is en de bal weggeschoten is
     boolean touched, isFinished=false;
 
-    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3, TextView scoreLabel) {
+    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3, TextView scoreLabel, TextView levelLabel) {
         super(context);
         handler = new Handler();
         runnable = new Runnable() {
@@ -85,6 +85,7 @@ class Game extends View {
         this.leven2 = leven2;
         this.leven3 = leven3;
         this.scoreLabel = scoreLabel;
+        this.levelLabel = levelLabel;
 
         be = BitmapFactory.decodeResource(getResources() ,R.drawable.ball_eaten);
         bf = BitmapFactory.decodeResource(getResources(), R.drawable.ball_full);
@@ -131,6 +132,7 @@ class Game extends View {
             extraball.setUitscherm(true);
             levels.addScore((100*level + levels.getPogingen()*50));
             scoreLabel.setText("Score : " + levels.getScore());
+            levelLabel.setText("Level : " + (level + 1));
             levels.resetPogingen();
             pogingTekst.setText(levels.getPogingen()+ " X");
             isFinished = false;
