@@ -10,8 +10,8 @@ public class Soft extends Block {
 
     public Soft(int X, int Y, int width, int height, Resources resources) {
         super(X, Y, width, height, 1);
-        this.img = BitmapFactory.decodeResource(resources, R.drawable.tomaat);
-        this.img = Bitmap.createScaledBitmap(this.img, this.height, this.height, false);
+        this.img = BitmapFactory.decodeResource(resources, R.drawable.tomato);
+        this.img = Bitmap.createScaledBitmap(this.img, height, height, false);
     }
 
 

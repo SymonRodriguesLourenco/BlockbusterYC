@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -27,187 +26,180 @@ import java.util.List;
 
 class Game extends View {
     //  voor het runnen van de applicatie:
-    Handler handler;
-    Runnable runnable;
-    Display display;
-    Point point;
-    int dWidth, dHeight;
-    MediaPlayer player;
+    private Handler handler;
+    private Runnable runnable;
+    private Display display;
+    private Point point;
+    private int dWidth, dHeight;
+    private MediaPlayer player;
 
     //voor de pogingen
-    ImageView poging1, leven1, leven2, leven3;
-    TextView pogingTekst, scoreLabel, levelLabel;
-    Bitmap be, bf, he, hf;
-    Level level;
+    private ImageView attempt, lifeOne, lifeTwo, lifeThree;
+    private TextView textAttempt, textScore, textLevel;
+    private Level level;
 
     //  voor het updaten van het scherm in miliseconde:
-    final long UPDATE_MILLIS = 1/3000;
+    private final long UPDATE_MILLIS = 1/3000;
 
     //  bal
-    Ball ball, extraball;
-    Bitmap ballMap, ballMap1;
-    List<Ball> ballList = new ArrayList<>();
+    private int bHeight;
+    private Ball ball, extraBall;
+    private Bitmap ballOne, ballTwo;
+    private List<Ball> balls = new ArrayList<>();
 
-    Cursor cursor;
+    private Cursor cursor;
 
     //  Blocks
-    List<Block> blocks = new ArrayList<>();
-    int bHeight;
-    boolean hitBlock;
+    private List<Block> blocks = new ArrayList<>();
+    private boolean hitBlock;
 
     //  als de bal naar links gaat is going forward false anders true, als de bal naar boven gaat i goingup true,anders false
-    Bitmap maxCursor, bigCursor, medCursor, minCursor;
+    private Bitmap maxCursor, bigCursor, medCursor, minCursor;
 
-    public Game(Context context, ImageView poging1, TextView pogingTekst, ImageView leven1, ImageView leven2, ImageView leven3, TextView scoreLabel, TextView levelLabel) {
+    public Game(Context context, ImageView attempt, ImageView lifeOne, ImageView lifeTwo, ImageView lifeThree, TextView textAttempt, TextView textScore, TextView textLevel) {
         super(context);
-        handler = new Handler();
-        runnable = new Runnable() {
+        this.handler = new Handler();
+        this.runnable = new Runnable() {
             @Override
             public void run() {
                 invalidate();
             }
         };
-        display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
-        point = new Point();
-        display.getSize(point);
-        dWidth = point.x;
-        dHeight = point.y;
-        this.poging1 = poging1;
-        this.pogingTekst = pogingTekst;
-        this.leven1 = leven1;
-        this.leven2 = leven2;
-        this.leven3 = leven3;
-        this.scoreLabel = scoreLabel;
-        this.levelLabel = levelLabel;
+        this.display = ((Activity)getContext()).getWindowManager().getDefaultDisplay();
+        this.point = new Point();
+        this.display.getSize(this.point);
+        this.dWidth = this.point.x;
+        this.dHeight = this.point.y;
+        this.attempt = attempt;
+        this.textAttempt = textAttempt;
+        this.lifeOne = lifeOne;
+        this.lifeTwo = lifeTwo;
+        this.lifeThree = lifeThree;
+        this.textScore = textScore;
+        this.textLevel = textLevel;
 
-        be = BitmapFactory.decodeResource(getResources() ,R.drawable.ball_eaten);
-        bf = BitmapFactory.decodeResource(getResources(), R.drawable.ball_full);
-        he = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon_empty);
-        hf = BitmapFactory.decodeResource(getResources(), R.drawable.hearticon);
+        this.bHeight = this.dHeight/100*8;
 
-        bHeight = dHeight/100*8;
+        this.ball = new Ball(this.bHeight, this.bHeight, "");
+        this.extraBall = new Ball(this.bHeight, this.bHeight, "");
+        this.ball.startPosition(this.dHeight);
+        this.extraBall.setPos(-1000, -1000);
 
-        ball = new Ball(bHeight, bHeight, "");
-        extraball = new Ball(bHeight, bHeight, "");
-        ball.startPosition(dHeight);
-        extraball.setPos(-1000, -1000);
+        this.cursor = new Cursor(50, this.bHeight);
 
-        this.cursor = new Cursor(50, bHeight);
+        this.level = new Level(this.dWidth,this.dHeight, getResources());
 
-        level = new Level(dWidth,dHeight, getResources());
+        this.ballOne = defineBitmap(R.drawable.donutfull, this.ball.getWidth(),this.ball.getHeight());
+        this.ballTwo = defineBitmap(R.drawable.donutfull, this.extraBall.getWidth(),this.extraBall.getHeight());
+        this.balls.add(this.ball);
 
-        ballMap = defineBitmap(R.drawable.ball_full, ball.getWidth(),ball.getHeight());
-        ballMap1 = defineBitmap(R.drawable.ball_full, extraball.getWidth(),extraball.getHeight());
-        ballList.add(ball);
+        this.maxCursor = defineBitmap(R.drawable.ball, this.cursor.getMaxCursorSize(), this.cursor.getMaxCursorSize());
+        this.bigCursor = defineBitmap(R.drawable.ball, this.cursor.getBigCursorSize(), this.cursor.getBigCursorSize());
+        this.medCursor = defineBitmap(R.drawable.ball, this.cursor.getMedCursorSize(), this.cursor.getMedCursorSize());
+        this.minCursor = defineBitmap(R.drawable.ball, this.cursor.getMinCursorSize(), this.cursor.getMinCursorSize());
 
-        maxCursor = defineBitmap(R.drawable.ball, cursor.getMaxCursorSize(), cursor.getMaxCursorSize());
-        bigCursor = defineBitmap(R.drawable.ball, cursor.getBigCursorSize(), cursor.getBigCursorSize());
-        medCursor = defineBitmap(R.drawable.ball, cursor.getMedCursorSize(), cursor.getMedCursorSize());
-        minCursor = defineBitmap(R.drawable.ball, cursor.getMinCursorSize(), cursor.getMinCursorSize());
-
-        pogingTekst.setText(level.getPogingen()+ " X");
+        textAttempt.setText(this.level.getAttempt()+ " X");
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(level.isFinished()){
-            canvas.drawColor(Color.TRANSPARENT);
-            level.levelUp();
-            ball.setBallPowerup("");
-            ballList.remove(extraball);
-            extraball.setUitscherm(true);
-            level.addScore((100* level.getLevel() + level.getPogingen()*50));
-            scoreLabel.setText("Score : " + level.getScore());
-            levelLabel.setText("Level : " + (level.getLevel() + 1));
-            level.resetPogingen();
-            pogingTekst.setText(level.getPogingen()+ " X");
-            if (level.getLevel() == level.size()){
+        if(this.level.isFinished()){
+            this.level.levelUp();
+            this.ball.setBallPowerup("");
+            this.balls.remove(this.extraBall);
+            this.extraBall.setOutOfBounds(true);
+            this.level.addScore((100* this.level.getLevel() + this.level.getAttempt()*50));
+            this.textScore.setText("Score : " + this.level.getScore());
+            this.textLevel.setText("Level : " + (this.level.getLevel() + 1));
+            this.level.resetAttempts();
+            this.textAttempt.setText(this.level.getAttempt()+ " X");
+            if (this.level.getLevel() == this.level.size()){
                 endGame();
             }
-            level.setFinished(false);
+            this.level.setFinished(false);
         }
-        if(level.size() > level.getLevel()) {
-            blocks = level.get(level.getLevel());
-            for (Block block : blocks){
+        if(this.level.size() > this.level.getLevel()) {
+            this.blocks = this.level.get(this.level.getLevel());
+            for (Block block : this.blocks){
                 block.draw(canvas);
             }
-            for (Ball donut: ballList) {
-                for (Block block : blocks) {
+            for (Ball donut: this.balls) {
+                for (Block block : this.blocks) {
                     block.bounce(donut.getSpeedX(), donut.getSpeedY(), donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight(), donut.isGoingUp(), donut.isGoingForward());
                 }
-                if(level.isTouched() && !level.isFinished()) {
-                    boolean uitkomst = donut.borderBounce(dWidth, dHeight);
-                    if (ball.isSound()){
+                if(this.level.isTouched() && !this.level.isFinished()) {
+                    boolean result = donut.borderBounce(this.dWidth, this.dHeight);
+                    if (this.ball.isSound()){
                         this.play();
                     }
-                    if (uitkomst) {
-                        donut.setUitscherm(true);
+                    if (result) {
+                        donut.setOutOfBounds(true);
                     }
                 }
-                for (Block block : blocks) {
+                for (Block block : this.blocks) {
                     if (block instanceof Finish) {
-                        hitBlock = ((Finish) block).hit(donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight(), 50);
-                        if (hitBlock) {
-                            level.setFinished(true);
+                        this.hitBlock = ((Finish) block).hit(donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight(), 50);
+                        if (this.hitBlock) {
+                            this.level.setFinished(true);
                         }
                     } else {
-                        hitBlock = block.hit(donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight());
-                        if (hitBlock) {
+                        this.hitBlock = block.hit(donut.getBallX(), donut.getBallY(), donut.getWidth(), donut.getHeight());
+                        if (this.hitBlock) {
                             boolean power = block.hit(donut.getBallPowerup());
                             if (!power) {
                                 this.play();
                                 donut.bounce(block.isFromUp(), block.isFromDown(), block.isFromRight(), block.isFromLeft());
                             }
                             if (block instanceof Powerupblock) {
-                                Powerupblock blocky = (Powerupblock) block;
-                                switch (blocky.getPowerup()) {
-                                    case "pogingen":
-                                        level.addPogingen();
-                                        pogingTekst.setText(level.getPogingen()+ " X");
+                                Powerupblock powerBlock = (Powerupblock) block;
+                                switch (powerBlock.getPowerup()) {
+                                    case "attempt":
+                                        this.level.addAttempt();
+                                        this.textAttempt.setText(this.level.getAttempt()+ " X");
                                         Toast.makeText(getContext(),"+1 poging",Toast.LENGTH_SHORT).show();
                                         break;
-                                    case "levens":
-                                        if (level.getLevens() < 3) {
-                                            level.addLevens();
-                                            displayLevens();
+                                    case "lives":
+                                        if (this.level.getLives() < 3) {
+                                            this.level.addLife();
+                                            displayLives();
                                             Toast.makeText(getContext(), "+1 leven", Toast.LENGTH_SHORT).show();
                                             break;
                                         }
                                     case "multiball":
-                                        ball.setBallPowerup("multiball");
+                                        this.ball.setBallPowerup("multiball");
                                         Toast.makeText(getContext(),"multiball",Toast.LENGTH_SHORT).show();
                                         break;
                                     case "powerball":
-                                        ball.setBallPowerup("powerballnotactive");
+                                        this.ball.setBallPowerup("powerballnotactive");
                                         Toast.makeText(getContext(),"powerball",Toast.LENGTH_SHORT).show();
                                         break;
                                 }
                             }
                             if(block.remove()) {
-                                level.subsScore(25);
-                                scoreLabel.setText("Score : " + level.getScore()   );
+                                this.level.subsScore(25);
+                                this.textScore.setText("Score : " + this.level.getScore()   );
                             }
                         }
                     }
                 }
                 donut.invert();
             }
-            if (level.isFinished()){
+            if (this.level.isFinished()){
                 reset();
-            } else if (ball.isUitscherm() && extraball.isUitscherm()){
-                verander();
+            } else if (this.ball.isOutOfBounds() && this.extraBall.isOutOfBounds()){
+                change();
             }
         }
-        canvas.drawBitmap(ballMap, ball.getBallX(), ball.getBallY(), null);
-        canvas.drawBitmap(maxCursor, cursor.getMaxCursorX(), cursor.getMaxCursorY(), null);
-        canvas.drawBitmap(bigCursor, cursor.getBigCursorX(), cursor.getBigCursorY(), null);
-        canvas.drawBitmap(medCursor, cursor.getMedCursorX(), cursor.getMedCursorY(), null);
-        canvas.drawBitmap(minCursor, cursor.getMinCursorX(), cursor.getMinCursorY(), null);
-        if (ballList.size() == 2) {
-            canvas.drawBitmap(ballMap1, extraball.getBallX(), extraball.getBallY(), null);
+        canvas.drawBitmap(this.ballOne, this.ball.getBallX(), this.ball.getBallY(), null);
+        canvas.drawBitmap(this.maxCursor, this.cursor.getMaxCursorX(), this.cursor.getMaxCursorY(), null);
+        canvas.drawBitmap(this.bigCursor, this.cursor.getBigCursorX(), this.cursor.getBigCursorY(), null);
+        canvas.drawBitmap(this.medCursor, this.cursor.getMedCursorX(), this.cursor.getMedCursorY(), null);
+        canvas.drawBitmap(this.minCursor, this.cursor.getMinCursorX(), this.cursor.getMinCursorY(), null);
+        if (this.balls.size() == 2) {
+            canvas.drawBitmap(this.ballTwo, this.extraBall.getBallX(), this.extraBall.getBallY(), null);
         }
-        handler.postDelayed(runnable, UPDATE_MILLIS);
+        this.handler.postDelayed(this.runnable, this.UPDATE_MILLIS);
     }
 
     public Bitmap defineBitmap(int shape, int width, int height) {
@@ -221,116 +213,116 @@ class Game extends View {
         int action = event.getAction();
         int x = (int) event.getX();
         int y = (int) event.getY();
-        this.cursor.vergroot(x, y, dHeight);
-        for (Ball donut : ballList) {
-            if (!ball.isFired()) {
-                if (ballList.size() > 1) {
-                    extraball.startPosition(dHeight);
+        this.cursor.endXEndY(x, y, this.dHeight);
+        for (Ball donut : this.balls) {
+            if (!this.ball.isFired()) {
+                if (this.balls.size() > 1) {
+                    this.extraBall.startPosition(this.dHeight);
                 }
-                this.cursor.coords(dHeight);
+                this.cursor.coords(this.dHeight);
             }
             if (action == MotionEvent.ACTION_UP) {
-                if (!donut.isFired() && level.isTouched()) {
-                    donut.ballSpeed(this.cursor.getVergrootX(), this.cursor.getVergrootY());
-                    if (ballList.size() > 1 && extraball == donut ) {
-                        extraball.multiBall(ball.isGoingUp(), ball.getSpeedX(), ball.getSpeedY());
+                if (!donut.isFired() && this.level.isTouched()) {
+                    donut.ballSpeed(this.cursor.getFactorX(), this.cursor.getFactorY());
+                    if (this.balls.size() > 1 && this.extraBall == donut ) {
+                        this.extraBall.multiBall(this.ball.isGoingUp(), this.ball.getSpeedX(), this.ball.getSpeedY());
                     }
                     this.cursor.remove();
                     donut.setFired(true);
-                    if (ball == donut){
-                        level.subsPogingen();
-                        pogingTekst.setText(level.getPogingen() + " X");
+                    if (this.ball == donut){
+                        this.level.subsAttempt();
+                        this.textAttempt.setText(this.level.getAttempt() + " X");
                     }
                 }
             }
         }
-        poging1.setImageResource(R.drawable.ball_eaten);
-        level.setTouched(true);
+        this.attempt.setImageResource(R.drawable.donuteaten);
+        this.level.setTouched(true);
         return true;
     }
 
     public void reset(){
-        ball.reset(dHeight);
-        level.setTouched(false);
-        poging1.setImageResource(R.drawable.ball_full);
-        if (ball.getBallPowerup().equals("none")){
-            ballList.remove(extraball);
+        this.ball.reset(this.dHeight);
+        this.level.setTouched(false);
+        this.attempt.setImageResource(R.drawable.donutfull);
+        if (this.ball.getBallPowerup().equals("none")){
+            this.balls.remove(this.extraBall);
         }
-        else if (ball.getBallPowerup().equals("powerballnotactive")){
-            ball.setBallPowerup("powerball");
+        else if (this.ball.getBallPowerup().equals("powerballnotactive")){
+            this.ball.setBallPowerup("powerball");
         }
-        else if (ball.getBallPowerup().equals("powerball")){
-            ball.setBallPowerup("none");
+        else if (this.ball.getBallPowerup().equals("powerball")){
+            this.ball.setBallPowerup("none");
 
-        }else if (ball.getBallPowerup().equals("multiball")){
-            ballList.add(extraball);
-            ball.setBallPowerup("none");
+        }else if (this.ball.getBallPowerup().equals("multiball")){
+            this.balls.add(this.extraBall);
+            this.ball.setBallPowerup("none");
         }
     }
 
     public void endGame(){
         Intent intent = new Intent(getContext(), GameOver.class);
         Bundle bundle = new Bundle();
-        bundle.putString("score", level.getScore() + "");
-        bundle.putBoolean("finished", level.isFinished());
+        bundle.putString("score", this.level.getScore() + "");
+        bundle.putBoolean("finished", this.level.isFinished());
         intent.putExtras(bundle);
         getContext().startActivity(intent);
         Activity activity = (Activity)getContext();
         activity.finish();
     }
 
-    public void verander() {
+    public void change() {
         reset();
 
-        if (level.getPogingen() == 0) {
-            poging1.setImageResource(R.drawable.ball_full);
-            level.resetPogingen();
-            pogingTekst.setText(level.getPogingen() + " X");
-            level.subsLevens();
+        if (this.level.getAttempt() == 0) {
+            this.attempt.setImageResource(R.drawable.donutfull);
+            this.level.resetAttempts();
+            this.textAttempt.setText(this.level.getAttempt() + " X");
+            this.level.subsLife();
         }
-        displayLevens();
-        if (level.getLevens() == 0) {
+        displayLives();
+        if (this.level.getLives() == 0) {
             endGame();
         }
     }
 
-    public void displayLevens() {
-        leven1.setImageResource(R.drawable.hearticon);
-        leven2.setImageResource(R.drawable.hearticon);
-        leven3.setImageResource(R.drawable.hearticon);
-        switch (level.getLevens()) {
+    public void displayLives() {
+        this.lifeOne.setImageResource(R.drawable.heartfull);
+        this.lifeTwo.setImageResource(R.drawable.heartfull);
+        this.lifeThree.setImageResource(R.drawable.heartfull);
+        switch (this.level.getLives()) {
             case 2:
-                leven1.setImageResource(R.drawable.hearticon_empty);
+                this.lifeOne.setImageResource(R.drawable.heartempty);
                 break;
             case 1:
-                leven1.setImageResource(R.drawable.hearticon_empty);
-                leven2.setImageResource(R.drawable.hearticon_empty);
+                this.lifeOne.setImageResource(R.drawable.heartempty);
+                this.lifeTwo.setImageResource(R.drawable.heartempty);
                 break;
             case 0:
-                leven1.setImageResource(R.drawable.hearticon_empty);
-                leven2.setImageResource(R.drawable.hearticon_empty);
-                leven3.setImageResource(R.drawable.hearticon_empty);
+                this.lifeOne.setImageResource(R.drawable.heartempty);
+                this.lifeTwo.setImageResource(R.drawable.heartempty);
+                this.lifeThree.setImageResource(R.drawable.heartempty);
                 break;
         }
     }
 
     public void play(){
-        if (player == null) {
-            player = MediaPlayer.create(getContext(), R.raw.clack);
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        if (this.player == null) {
+            this.player = MediaPlayer.create(getContext(), R.raw.clack);
+            this.player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     stopPlayer();
                 }
             });
         }
-        player.start();
+        this.player.start();
     }
 
-    private void stopPlayer() {
-        if (player != null) {
-            player.release();
-            player = null;
+    public void stopPlayer() {
+        if (this.player != null) {
+            this.player.release();
+            this.player = null;
         }
     }
 }

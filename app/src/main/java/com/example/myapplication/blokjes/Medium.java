@@ -10,8 +10,8 @@ public class Medium extends Block {
 
     public Medium(int X, int Y, int width, int height, Resources resources) {
         super(X, Y, width, height, 2);
-        this.img = BitmapFactory.decodeResource(resources, R.drawable.bloemkool);
-        this.img = Bitmap.createScaledBitmap(this.img, this.height, this.height, false);
+        this.img = BitmapFactory.decodeResource(resources, R.drawable.cauliflower);
+        this.img = Bitmap.createScaledBitmap(this.img, height, height, false);
     }
 
 }

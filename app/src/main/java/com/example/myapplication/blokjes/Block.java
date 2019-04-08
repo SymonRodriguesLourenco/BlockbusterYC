@@ -10,11 +10,11 @@ import com.example.myapplication.R;
 
 public abstract class Block extends Activity{
 
-    int width, height;
-    int minX, minY, maxX, maxY;
-    int hitsLeft;
-    boolean fromUp, fromLeft, fromDown, fromRight;
-    Bitmap img;
+    protected int width, height;
+    protected int minX, minY, maxX, maxY;
+    private int hitsLeft;
+    private boolean fromUp, fromLeft, fromDown, fromRight;
+    protected Bitmap img;
 
     public Block(int X, int Y, int width, int height, int hitsLeft) {
         this.width = width;
@@ -26,28 +26,25 @@ public abstract class Block extends Activity{
         this.minY = maxY + height;
         this.hitsLeft = hitsLeft;
     }
+
     public void draw(Canvas canvas){
         canvas.drawBitmap(this.img, this.minX, this.maxY, null);
     }
 
-    public int getHitsLeft() {
-        return hitsLeft;
-    }
-
     public boolean isFromUp() {
-        return fromUp;
+        return this.fromUp;
     }
 
     public boolean isFromLeft() {
-        return fromLeft;
+        return this.fromLeft;
     }
 
     public boolean isFromDown() {
-        return fromDown;
+        return this.fromDown;
     }
 
     public boolean isFromRight() {
-        return fromRight;
+        return this.fromRight;
     }
 
     public void setHitsLeft(int hitsLeft) {
@@ -68,81 +65,82 @@ public abstract class Block extends Activity{
     }
 
     public boolean hit(int balX, int balY, int width, int height){
-        if (minX < balX+width && balX < maxX && minY > balY && balY+height > maxY) {
+        if (this.minX < balX+width && balX < this.maxX && this.minY > balY && balY+height > this.maxY) {
             return true;
         }
         else{
             return false;
         }
     }
+
     public void bounce(int speedX, int speedY, int ballX, int ballY, int width, int height, boolean goingUp, boolean goingRight){
         reset();
-        int cballX, cballY;
-        boolean c1, c2, c3;
+        int checkBallX, checkBallY;
+        boolean checkOne, checkTwo, checkThree;
         if(goingRight && goingUp) {
-            cballX = ballX + speedX;
-            c1 = hit(cballX, ballY, width, height);
-            cballY = ballY - speedY;
-            c2 = hit(ballX, cballY, width, height);
-            c3 = hit(cballX, cballY, width, height);
-            if (c1) {
+            checkBallX = ballX + speedX;
+            checkOne = hit(checkBallX, ballY, width, height);
+            checkBallY = ballY - speedY;
+            checkTwo = hit(ballX, checkBallY, width, height);
+            checkThree = hit(checkBallX, checkBallY, width, height);
+            if (checkOne) {
                 this.fromLeft = true;
             }
-            if (c2) {
+            if (checkTwo) {
                 this.fromDown = true;
             }
-            if (!c1 && !c2 && c3) {
+            if (!checkOne && !checkTwo && checkThree) {
                 this.fromLeft = true;
                 this.fromDown = true;
             }
         }
         else if(!goingRight && goingUp){
-            cballX = ballX - speedX;
-            c1 = hit(cballX, ballY, width, height);
-            cballY = ballY - speedY;
-            c2 = hit(ballX, cballY, width, height);
-            c3 = hit(cballX, cballY, width, height);
-            if (c1){
+            checkBallX = ballX - speedX;
+            checkOne = hit(checkBallX, ballY, width, height);
+            checkBallY = ballY - speedY;
+            checkTwo = hit(ballX, checkBallY, width, height);
+            checkThree = hit(checkBallX, checkBallY, width, height);
+            if (checkOne){
                 this.fromRight = true;
             }
-            if (c2){
+            if (checkTwo){
                 this.fromDown = true;
             }
-            if (!c1 && !c2 && c3){
+            if (!checkOne && !checkTwo && checkThree){
                 this.fromRight = true;
                 this.fromDown = true;
             }
         }
         else if(goingRight && !goingUp) {
-            cballX = ballX + speedX;
-            c1 = hit(cballX, ballY, width, height);
-            cballY = ballY + speedY;
-            c2 = hit(ballX, cballY, width, height);
-            c3 = hit(cballX, cballY, width, height);
-            if (c1) {
+            checkBallX = ballX + speedX;
+            checkOne = hit(checkBallX, ballY, width, height);
+            checkBallY = ballY + speedY;
+            checkTwo = hit(ballX, checkBallY, width, height);
+            checkThree = hit(checkBallX, checkBallY, width, height);
+            if (checkOne) {
                 this.fromLeft = true;
             }
-            if (c2) {
+            if (checkTwo) {
                 this.fromUp = true;
             }
-            if (!c1 && !c2 && c3) {
+            if (!checkOne && !checkTwo && checkThree) {
                 this.fromLeft = true;
                 this.fromUp = true;
             }
         }
         else if(!goingRight && !goingUp){
-            cballX = ballX - speedX;
-            c1 = hit(cballX, ballY, width, height);
-            cballY = ballY + speedY;
-            c2 = hit(ballX, cballY, width, height);
-            c3 = hit(cballX, cballY, width, height);
-            if (c1){
+            checkBallX = ballX - speedX;
+            checkOne = hit(checkBallX, ballY, width, height);
+            checkBallY = ballY + speedY;
+            checkTwo = hit(ballX, checkBallY, width, height);
+            checkThree = hit(checkBallX, checkBallY, width, height);
+            if (checkOne){
                 this.fromRight = true;
             }
-            if (c2){
+            if (checkTwo){
                 this.fromUp = true;
             }
-            if (!c1 && !c2 && c3){
+            if (!checkOne && !checkTwo && checkThree){
                 this.fromRight = true;
                 this.fromUp = true;
             }
@@ -155,6 +153,7 @@ public abstract class Block extends Activity{
         this.fromUp = false;
         this.fromDown = false;
     }
+
     public boolean hit(String powerup){
         if (powerup.equals("powerball")){
             if (this.hitsLeft < 0){
@@ -166,7 +165,7 @@ public abstract class Block extends Activity{
                return true;
             }
         } else {
-            hitsLeft --;
+            this.hitsLeft --;
             return false;
         }
     }

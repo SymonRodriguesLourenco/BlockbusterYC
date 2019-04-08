@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ball_eaten"
+        android:icon="@drawable/donuteaten"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ball_eaten"
+        android:roundIcon="@drawable/donuteaten"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity

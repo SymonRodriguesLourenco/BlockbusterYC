@@ -14,11 +14,11 @@
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
-        android:src="@drawable/pompoen" />
+        android:src="@drawable/pumpkin" />
 
 
     <TextView
-        android:id="@+id/highscoreLabel"
+        android:id="@+id/textHighScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

@@ -6,18 +6,18 @@ public class Ball {
     private int width, height;
     private int speedX, speedY;
     private boolean goingForward, goingUp;
-    private boolean fired, uitscherm;
+    private boolean fired, outOfBounds;
     private String ballPowerup;
     private boolean invertX, invertY;
     private int countY, countX;
     private boolean sound;
 
-    public boolean isUitscherm() {
-        return uitscherm;
+    public boolean isOutOfBounds() {
+        return this.outOfBounds;
     }
 
-    public void setUitscherm(boolean uitscherm) {
-        this.uitscherm = uitscherm;
+    public void setOutOfBounds(boolean outOfBounds) {
+        this.outOfBounds = outOfBounds;
     }
 
     public Ball(int width, int height, String ballPowerup) {
@@ -29,48 +29,48 @@ public class Ball {
         this.goingUp = false;
         this.goingForward = true;
         this.ballPowerup = ballPowerup;
-        this.uitscherm = true;
+        this.outOfBounds = true;
         this.sound = false;
     }
 
     public int getBallX() {
-        return ballX;
+        return this.ballX;
     }
 
     public int getBallY() {
-        return ballY;
+        return this.ballY;
     }
 
     public int getSpeedX() {
-        return speedX;
+        return this.speedX;
     }
 
     public int getSpeedY() {
-        return speedY;
+        return this.speedY;
     }
 
     public String getBallPowerup() {
-        return ballPowerup;
+        return this.ballPowerup;
     }
 
     public void startPosition(int dheight) {
-        this.uitscherm = false;
+        this.outOfBounds = false;
         this.ballX = 50;
-        this.ballY = dheight/2 - height/2;
+        this.ballY = dheight/2 - this.height/2;
         this.goingForward = true;
         this.goingUp = false;
     }
 
     public boolean isGoingForward() {
-        return goingForward;
+        return this.goingForward;
     }
 
     public boolean isGoingUp() {
-        return goingUp;
+        return this.goingUp;
     }
 
     public boolean isFired() {
-        return fired;
+        return this.fired;
     }
 
     public void setFired(boolean fired) {
@@ -82,29 +82,29 @@ public class Ball {
     }
 
     public int getWidth(){
-        return width;
+        return this.width;
     }
 
     public int getHeight(){
-        return height;
+        return this.height;
     }
 
     public boolean borderBounce(int dWidth, int dHeight){
 //      checken of de bal uit het scherm is:
         int minX = 0;
         int minY = 0;
-        int maxX = dWidth - width;
-        int maxY = dHeight - height;
-        boolean uitkomst = false;
+        int maxX = dWidth - this.width;
+        int maxY = dHeight - this.height;
+        boolean result = false;
         this.sound = false;
 
 //          bal gaat naar links
         if ((ballX - speedX) < minX - (this.width *2)) {
             if ((ballX - speedX) < minX) {
 //                ballX = minX;
-                uitkomst = true;
+                result = true;
             }
-            return uitkomst;
+            return result;
         }
 
 //          bal gaat naar rechts
@@ -144,12 +144,12 @@ public class Ball {
         else if (goingUp) {
             this.ballY -= speedY;
         }
-        return uitkomst;
+        return result;
 
     }
 
     public boolean isSound() {
-        return sound;
+        return this.sound;
     }
 
     public void setPos(int ballX, int ballY) {
@@ -158,37 +158,37 @@ public class Ball {
     }
 
     public void invert(){
-        if (invertX){
-            if (countY > 1){
-                invertX = false;
+        if (this.invertX){
+            if (this.countY > 1){
+                this.invertX = false;
             } else {
-                if (goingForward) {
-                    goingForward = false;
+                if (this.goingForward) {
+                    this.goingForward = false;
                 } else {
-                    goingForward = true;
+                    this.goingForward = true;
                 }
-                invertX = false;
+                this.invertX = false;
             }
         }
-        if (invertY) {
-            if (countX > 1){
-                invertY = false;
+        if (this.invertY) {
+            if (this.countX > 1){
+                this.invertY = false;
             } else {
-                if (goingUp) {
-                    goingUp = false;
+                if (this.goingUp) {
+                    this.goingUp = false;
                 } else {
-                    goingUp = true;
+                    this.goingUp = true;
                 }
-                invertY = false;
+                this.invertY = false;
             }
         }
-        countX = 0;
-        countY = 0;
+        this.countX = 0;
+        this.countY = 0;
     }
 
-    public void ballSpeed(double vergrootX, double vergrootY){
-        int tempX = -(int) vergrootX;
-        int tempY = -(int) vergrootY;
+    public void ballSpeed(double factorX, double factorY){
+        int tempX = -(int) factorX;
+        int tempY = -(int) factorY;
         if (tempY < 0) {
             tempY *= -1;
             this.goingUp = true;

@@ -7,7 +7,7 @@ public class Cursor {
     private int ballSize;
     private int maxCursorSize, bigCursorSize, medCursorSize, minCursorSize;
     private double standardspeed;
-    private double vergrootX, vergrootY;
+    private double factorX, factorY;
 
     public Cursor(int size,int ballSize){
         remove();
@@ -26,79 +26,79 @@ public class Cursor {
         this.minCursorX = -1000;
     }
 
-    public void vergroot(int x, int y, int dHeight){
+    public void endXEndY(int x, int y, int dHeight){
         this.intervalX = (50 + this.ballSize / 2 - x);
         this.intervalY = (dHeight / 2 - y);
         double slope = Math.sqrt(this.intervalX * this.intervalX + this.intervalY * this.intervalY);
-        double vergroting = standardspeed / slope;
-        this.vergrootX = vergroting * this.intervalX;
-        this.vergrootY = vergroting * this.intervalY;
+        double factor = standardspeed / slope;
+        this.factorX = factor * this.intervalX;
+        this.factorY = factor * this.intervalY;
     }
 
     public void coords(int dHeight){
-        bigCursorX = -(int) this.vergrootX * 65 / 10 + (this.ballSize / 2 + 50 - bigCursorSize / 2);
-        bigCursorY = -(int) this.vergrootY * 65 / 10 + (dHeight / 2 - bigCursorSize / 2);
-        medCursorX = -(int) this.vergrootX * 4 + (this.ballSize / 2 + 50 - medCursorSize / 2);
-        medCursorY = -(int) this.vergrootY * 4 + (dHeight / 2 - medCursorSize / 2);
-        minCursorX = -(int) this.vergrootX * 2 + (this.ballSize / 2 + 50 - minCursorSize / 2);
-        minCursorY = -(int) this.vergrootY * 2 + (dHeight / 2 - minCursorSize / 2);
-        maxCursorX = -(int) this.vergrootX * 95 / 10 + (this.ballSize / 2 + 50 - maxCursorSize / 2);
-        maxCursorY = -(int) this.vergrootY * 95 / 10 + (dHeight / 2 - maxCursorSize / 2);
+        this.bigCursorX = -(int) this.factorX * 65 / 10 + (this.ballSize / 2 + 50 - this.bigCursorSize / 2);
+        this.bigCursorY = -(int) this.factorY * 65 / 10 + (dHeight / 2 - this.bigCursorSize / 2);
+        this.medCursorX = -(int) this.factorX * 4 + (this.ballSize / 2 + 50 - this.medCursorSize / 2);
+        this.medCursorY = -(int) this.factorY * 4 + (dHeight / 2 - this.medCursorSize / 2);
+        this.minCursorX = -(int) this.factorX * 2 + (this.ballSize / 2 + 50 - this.minCursorSize / 2);
+        this.minCursorY = -(int) this.factorY * 2 + (dHeight / 2 - this.minCursorSize / 2);
+        this.maxCursorX = -(int) this.factorX * 95 / 10 + (this.ballSize / 2 + 50 - this.maxCursorSize / 2);
+        this.maxCursorY = -(int) this.factorY * 95 / 10 + (dHeight / 2 - this.maxCursorSize / 2);
     }
 
     public int getMaxCursorSize() {
-        return maxCursorSize;
+        return this.maxCursorSize;
     }
 
     public int getBigCursorSize() {
-        return bigCursorSize;
+        return this.bigCursorSize;
     }
 
     public int getMedCursorSize() {
-        return medCursorSize;
+        return this.medCursorSize;
     }
 
     public int getMinCursorSize() {
-        return minCursorSize;
+        return this.minCursorSize;
     }
 
     public int getMaxCursorX() {
-        return maxCursorX;
+        return this.maxCursorX;
     }
 
     public int getMaxCursorY() {
-        return maxCursorY;
+        return this.maxCursorY;
     }
 
     public int getBigCursorX() {
-        return bigCursorX;
+        return this.bigCursorX;
     }
 
     public int getBigCursorY() {
-        return bigCursorY;
+        return this.bigCursorY;
     }
 
     public int getMedCursorX() {
-        return medCursorX;
+        return this.medCursorX;
     }
 
     public int getMedCursorY() {
-        return medCursorY;
+        return this.medCursorY;
     }
 
     public int getMinCursorX() {
-        return minCursorX;
+        return this.minCursorX;
     }
 
     public int getMinCursorY() {
-        return minCursorY;
+        return this.minCursorY;
     }
 
-    public double getVergrootX() {
-        return vergrootX;
+    public double getFactorX() {
+        return this.factorX;
     }
 
-    public double getVergrootY() {
-        return vergrootY;
+    public double getFactorY() {
+        return this.factorY;
     }
 }

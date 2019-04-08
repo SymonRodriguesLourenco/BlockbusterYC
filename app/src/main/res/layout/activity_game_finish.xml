@@ -21,9 +21,9 @@
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="90dp"
-        android:src="@drawable/ball_full" />
+        android:src="@drawable/donutfull" />
     <TextView
-        android:id="@+id/scoreLabel1"
+        android:id="@+id/textScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -33,7 +33,7 @@
         android:text="150"
         android:textSize="40dp" />
     <TextView
-        android:id="@+id/highscoreLabel"
+        android:id="@+id/textHighScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

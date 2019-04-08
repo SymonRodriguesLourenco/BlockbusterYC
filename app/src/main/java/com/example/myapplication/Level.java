@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.example.myapplication.blokjes.Block;
 import com.example.myapplication.blokjes.Finish;
@@ -17,14 +16,14 @@ public class Level extends ArrayList<ArrayList<Block>>{
     private int padding;
     private int dWidth, dHeight;
     private Resources resources;
-    private int levens, pogingen, score;
+    private int lives, attempt, score;
     private int level;
     private boolean finished, touched;
 
 
     public Level(int dWidth, int dHeight, Resources resources){
-        this.levens = 3;
-        this.pogingen = 3;
+        this.lives = 3;
+        this.attempt = 3;
         this.score = 0;
         this.dWidth = dWidth;
         this.dHeight = dHeight;
@@ -52,7 +51,7 @@ public class Level extends ArrayList<ArrayList<Block>>{
     }
 
     public int getLevel() {
-        return level;
+        return this.level;
     }
 
     public void levelUp(){
@@ -60,62 +59,62 @@ public class Level extends ArrayList<ArrayList<Block>>{
     }
 
     public int getScore() {
-        return score;
+        return this.score;
     }
 
-    public int getLevens() {
-        return levens;
+    public int getLives() {
+        return this.lives;
     }
 
-    public void resetPogingen(){
-        this.pogingen = 3;
+    public void resetAttempts(){
+        this.attempt = 3;
     }
 
-    public void addLevens(){
-        this.levens ++;
+    public void addLife(){
+        this.lives++;
     }
 
     public boolean isFinished() {
-        return finished;
+        return this.finished;
     }
 
     public void setFinished(boolean finished) {
         this.finished = finished;
     }
 
-    public void addPogingen(){
-        this.pogingen ++;
+    public void addAttempt(){
+        this.attempt++;
     }
 
-    public void subsLevens(){
-        this.levens -= 1;
+    public void subsLife(){
+        this.lives -= 1;
         resetLevel();
     }
 
-    public void subsPogingen(){
-        this.pogingen --;
+    public void subsAttempt(){
+        this.attempt--;
     }
 
-    public int getPogingen() {
-        return pogingen;
+    public int getAttempt() {
+        return this.attempt;
     }
 
     public void resetLevel(){
         this.clear();
-        Level1();
-        Level2();
-        Level3();
-        Level4();
-        Level5();
-        Level6();
-        Level7();
-        Level8();
-        Level9();
-        Level10();
+        this.Level1();
+        this.Level2();
+        this.Level3();
+        this.Level4();
+        this.Level5();
+        this.Level6();
+        this.Level7();
+        this.Level8();
+        this.Level9();
+        this.Level10();
     }
 
     public boolean isTouched() {
-        return touched;
+        return this.touched;
     }
 
     public void setTouched(boolean touched) {
@@ -123,138 +122,136 @@ public class Level extends ArrayList<ArrayList<Block>>{
     }
 
     private void Level1() {
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*20;
         int finishWidth = blockdim*1;
         int finishHeight= blockdim*1;
-        tijdelijk.add(new Soft(dWidth/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Finish(dWidth-blockdim/2, dHeight/2, finishWidth, finishHeight, resources));
-        this.add(tijdelijk);
+        temp.add(new Soft(dWidth/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Finish(dWidth-blockdim/2, dHeight/2, finishWidth, finishHeight, resources));
+        this.add(temp);
     }
 
     private void Level2() {
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*15;
         int finishWidth = blockdim;
         int finishHeight= dHeight-padding;
-        tijdelijk.add(new Finish(dWidth-blockdim/2, dHeight/2+blockdim/4, finishWidth, finishHeight, resources));
-        tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, padding+blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, padding+blockdim/2+blockdim, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, dHeight-blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth-blockdim - blockdim/2, dHeight-blockdim/2-blockdim, blockdim, blockdim, resources));
-        tijdelijk.add(new Powerupblock(dWidth/2, dHeight/2, blockdim*2, blockdim*2, "", resources));
-        this.add(tijdelijk);
+        temp.add(new Finish(dWidth-blockdim/2, dHeight/2+blockdim/4, finishWidth, finishHeight, resources));
+        temp.add(new Hard(dWidth-blockdim - blockdim/2, padding+blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Hard(dWidth-blockdim - blockdim/2, padding+blockdim/2+blockdim, blockdim, blockdim, resources));
+        temp.add(new Hard(dWidth-blockdim - blockdim/2, dHeight-blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Hard(dWidth-blockdim - blockdim/2, dHeight-blockdim/2-blockdim, blockdim, blockdim, resources));
+        temp.add(new Powerupblock(dWidth/2, dHeight/2, blockdim*2, blockdim*2, "", resources));
+        this.add(temp);
     }
 
     private void Level3() {
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*15;
         int finishWidth = blockdim;
         int finishHeight= dHeight-padding;
-        tijdelijk.add(new Finish(dWidth-blockdim/2, dHeight/2+blockdim/4, finishWidth, finishHeight, resources));
-        tijdelijk.add(new Hard(dWidth/2, padding+blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth/2, dHeight - blockdim*4 - blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth/2, dHeight - blockdim*3 - blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth/2, dHeight - blockdim*2 - blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Medium(dWidth/2, dHeight - blockdim*1 - blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth/2, dHeight - blockdim/2, blockdim, blockdim, resources));
-        this.add(tijdelijk);
+        temp.add(new Finish(dWidth-blockdim/2, dHeight/2+blockdim/4, finishWidth, finishHeight, resources));
+        temp.add(new Hard(dWidth/2, padding+blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Hard(dWidth/2, dHeight - blockdim*4 - blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Hard(dWidth/2, dHeight - blockdim*3 - blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Hard(dWidth/2, dHeight - blockdim*2 - blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Medium(dWidth/2, dHeight - blockdim*1 - blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Hard(dWidth/2, dHeight - blockdim/2, blockdim, blockdim, resources));
+        this.add(temp);
     }
 
     private void Level4() {
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*20;
-        tijdelijk.add(new Hard(dWidth/2, padding+blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth/2, dHeight- padding-blockdim/2, blockdim, dHeight/100*20, resources));
-        tijdelijk.add(new Finish(dWidth-150, dHeight/2, 100, 100, resources));
-        this.add(tijdelijk);
+        temp.add(new Hard(dWidth/2, padding+blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Hard(dWidth/2, dHeight- padding-blockdim/2, blockdim, dHeight/100*20, resources));
+        temp.add(new Finish(dWidth-150, dHeight/2, 100, 100, resources));
+        this.add(temp);
     }
 
     private void Level5() {
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*20;
-        tijdelijk.add(new Hard(dWidth/2, padding+blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth/2, dHeight- padding-blockdim/2, blockdim, dHeight/100*20, resources));
-        tijdelijk.add(new Finish(dWidth-150, dHeight/100*30, 250, 250, resources));
-        this.add(tijdelijk);
+        temp.add(new Hard(dWidth/2, padding+blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Hard(dWidth/2, dHeight- padding-blockdim/2, blockdim, dHeight/100*20, resources));
+        temp.add(new Finish(dWidth-150, dHeight/100*30, 250, 250, resources));
+        this.add(temp);
     }
 
     private void Level6() {
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*20;
-        int blockdim2 = dHeight/100*15;
+        int blockdimTwo = dHeight/100*15;
         int finishWidth = blockdim;
-        tijdelijk.add(new Powerupblock (dWidth/4, blockdim*2, blockdim2, blockdim2, "", resources));
-        tijdelijk.add(new Soft (dWidth/4, blockdim*4, blockdim2, blockdim2, resources));
-        tijdelijk.add(new Hard (dWidth/2, blockdim/2+padding, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth/2, dHeight/2+padding/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth/2, dHeight-blockdim/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Soft(dWidth-dWidth/4, blockdim*2, blockdim2, blockdim2, resources));
-        tijdelijk.add(new Powerupblock (dWidth-dWidth/4, blockdim*4, blockdim2, blockdim2, "", resources));
-        tijdelijk.add(new Finish(dWidth-blockdim/2, dHeight/2+blockdim/4, finishWidth, finishWidth, resources));
-        this.add(tijdelijk);
+        temp.add(new Powerupblock (dWidth/4, blockdim*2, blockdimTwo, blockdimTwo, "", resources));
+        temp.add(new Soft (dWidth/4, blockdim*4, blockdimTwo, blockdimTwo, resources));
+        temp.add(new Hard (dWidth/2, blockdim/2+padding, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth/2, dHeight/2+padding/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth/2, dHeight-blockdim/2, blockdim, blockdim, resources));
+        temp.add(new Soft(dWidth-dWidth/4, blockdim*2, blockdimTwo, blockdimTwo, resources));
+        temp.add(new Powerupblock (dWidth-dWidth/4, blockdim*4, blockdimTwo, blockdimTwo, "", resources));
+        temp.add(new Finish(dWidth-blockdim/2, dHeight/2+blockdim/4, finishWidth, finishWidth, resources));
+        this.add(temp);
     }
 
     private void Level7() {
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*15;
         int finishWidth = blockdim;
-        tijdelijk.add(new Medium (dWidth/2-blockdim, dHeight/2-finishWidth, blockdim, blockdim, resources));
-        tijdelijk.add(new Soft(dWidth/2-blockdim, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Medium (dWidth/2-blockdim, dHeight/2+finishWidth, blockdim, blockdim, resources));
-        tijdelijk.add(new Soft (dWidth/2, dHeight/2-finishWidth, blockdim, blockdim, resources));
-        tijdelijk.add(new Finish(dWidth/2, dHeight/2, finishWidth, finishWidth, resources));
-        tijdelijk.add(new Soft (dWidth/2, dHeight/2+finishWidth, blockdim, blockdim, resources));
-        this.add(tijdelijk);
+        temp.add(new Medium (dWidth/2-blockdim, dHeight/2-finishWidth, blockdim, blockdim, resources));
+        temp.add(new Soft(dWidth/2-blockdim, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Medium (dWidth/2-blockdim, dHeight/2+finishWidth, blockdim, blockdim, resources));
+        temp.add(new Soft (dWidth/2, dHeight/2-finishWidth, blockdim, blockdim, resources));
+        temp.add(new Finish(dWidth/2, dHeight/2, finishWidth, finishWidth, resources));
+        temp.add(new Soft (dWidth/2, dHeight/2+finishWidth, blockdim, blockdim, resources));
+        this.add(temp);
     }
 
     private void Level8(){
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*15;
         int finishWidth = blockdim;
-        tijdelijk.add(new Hard (dWidth/2-blockdim, dHeight/2-finishWidth, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard(dWidth/2-blockdim, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth/2-blockdim, dHeight/2+finishWidth, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth/2, dHeight/2-finishWidth, blockdim, blockdim, resources));
-        tijdelijk.add(new Finish(dWidth/2, dHeight/2, finishWidth, finishWidth, resources));
-        tijdelijk.add(new Hard (dWidth/2, dHeight/2+finishWidth, blockdim, blockdim, resources));
-        tijdelijk.add(new Powerupblock(blockdim*2, dHeight-blockdim/2, blockdim, blockdim, "", resources));
-        this.add(tijdelijk);
+        temp.add(new Hard(dWidth/2-blockdim, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth/2, dHeight/2-finishWidth, blockdim, blockdim, resources));
+        temp.add(new Finish(dWidth/2, dHeight/2, finishWidth, finishWidth, resources));
+        temp.add(new Hard (dWidth/2, dHeight/2+finishWidth, blockdim, blockdim, resources));
+        temp.add(new Powerupblock(blockdim*2, dHeight-blockdim/2, blockdim, blockdim, "", resources));
+        this.add(temp);
     }
 
     private void Level9(){
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*15;
         int finishWidth = blockdim;
         int finishHeight= blockdim;
-        tijdelijk.add(new Hard (dWidth-blockdim*9-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*8-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*7-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*6-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*5-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*4-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*3-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*2-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Finish(dWidth-blockdim/2, dHeight/2, finishWidth, finishHeight, resources));
-        this.add(tijdelijk);
+        temp.add(new Hard (dWidth-blockdim*9-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*8-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*7-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*6-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*5-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*4-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*3-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*2-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Finish(dWidth-blockdim/2, dHeight/2, finishWidth, finishHeight, resources));
+        this.add(temp);
     }
 
     private void Level10(){
-        ArrayList<Block> tijdelijk = new ArrayList<>();
+        ArrayList<Block> temp = new ArrayList<>();
         int blockdim = dHeight/100*15;
         int finishWidth = blockdim;
         int finishHeight= blockdim;
-        tijdelijk.add(new Hard (dWidth-blockdim*9-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Soft (dWidth-blockdim*8-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*7-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Medium (dWidth-blockdim*6-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*5-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Soft (dWidth-blockdim*4-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim*3-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Medium (dWidth-blockdim*2-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Hard (dWidth-blockdim-blockdim/2, dHeight/2, blockdim, blockdim, resources));
-        tijdelijk.add(new Finish(dWidth-blockdim/2, dHeight/2, finishWidth, finishHeight, resources));
-        this.add(tijdelijk);
+        temp.add(new Hard (dWidth-blockdim*9-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Soft (dWidth-blockdim*8-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*7-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Medium (dWidth-blockdim*6-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*5-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Soft (dWidth-blockdim*4-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim*3-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Medium (dWidth-blockdim*2-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Hard (dWidth-blockdim-blockdim/2, dHeight/2, blockdim, blockdim, resources));
+        temp.add(new Finish(dWidth-blockdim/2, dHeight/2, finishWidth, finishHeight, resources));
+        this.add(temp);
     }
 }
